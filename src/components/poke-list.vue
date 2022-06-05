@@ -23,7 +23,7 @@ export default {
     'imageUrl',
     'apiUrl'
     ],
-     data() {
+    data() {
     return {
       pokemons:[],
       nextUrl:'',
@@ -48,8 +48,8 @@ export default {
         .then((data) => {
           this.nextUrl = data.next;
           data.results.forEach(pokemon => {
-            pokemon.id =pokemon.url.split('/')
-            .filter(function(part){ return !!part}).pop()
+            pokemon.id = pokemon.url.split('/')
+              .filter(function(part){ return !!part}).pop()
             this.pokemons.push(pokemon);
           });
         })
