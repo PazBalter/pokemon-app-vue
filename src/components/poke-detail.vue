@@ -5,7 +5,7 @@
                 <img :src="imageUrl + pokemon.id + '.png'" alt="">
             </div>
             <div v-if="pokemon" class="data">
-                 <h2>{{pokemon.name}}</h2>
+                <h2>{{pokemon.name}}</h2>
                 <div class="property">
                     <div class="left">Base Experience</div>
                     <div class="right">{{pokemon.base_experience}} XP</div>
@@ -25,9 +25,18 @@
                         :key="'value'+index">{{value.type.name}}
                     </div>
                 </div>
+            <div v-if="checkedPokeId">
+                <button v-if="partySlots" class="detail-btn party" @click="addParty">Add Pokemon</button>  
+                <button v-if="!partySlots" class="detail-btn is-full">Party Is Full</button>  
             </div>
+            <div  v-else>
+                <button v-if="partySlots" class="detail-btn added">Pokemon Added</button>
+                <button v-if="!partySlots" class="detail-btn is-full">Party Is Full</button>  
+            </div>
+         
+            </div>
+           
             <h2 v-else>The pokemon was not found</h2>
-            <button class="detail-btn party" @click="addParty">Add Pokemon</button>  
             <button class="detail-btn" @click="closeDetail">Close</button>  
             
     
@@ -43,19 +52,25 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default{
     props:[
         'pokemonUrl',
-        'imageUrl'
+        'imageUrl',
+        'partySlots'
     ],
     components:{
         PulseLoader
     },
     data:()=>{
         return{
-           show: false,
-           pokemon: {} 
+            slots: true,
+            show: false,
+            checkedPokeId: true,
+            pokemon: {},
+
         }
     },
     created(){
+        console.log(this.pokemonUrl)
         this.fetchData()
+        
     },
     methods:{
         fetchData(){   
@@ -68,16 +83,26 @@ export default{
             .then((data) => {
                 this.pokemon = data;
                 this.show = true;
+                this.checkId() 
             })
             .catch((error) =>{
                 console.log(error);
-            })  
+            }) 
+           
         },
         closeDetail(){
             this.$emit('closeDetail');
         },
         addParty(){
             this.$emit("addParty",this.pokemon)
+            this.checkId()
+        },
+        checkId(){
+            const ChoosenPokemons = this.$store.getters.getMyPokemons
+            this.checkedPokeId = ChoosenPokemons.every(this.compareId)
+        },
+        compareId(pokemon){
+            return pokemon.id !== this.pokemon.id
         }
     },
   
@@ -110,7 +135,7 @@ export default{
         padding: 85px 0 0;
         background-color: #fff;
         border-radius: 5px;
-        box-shadow: 0 15px 30px rgba(0,0,0,.2) ,
+        box-shadow: 0 15px 30px rgba(0,0,0,.2),
                     0 15px 30px rgba(0,0,0,.2);
 
         .poke-img{
@@ -195,9 +220,24 @@ export default{
             font-size: 1.2rem;
             cursor: pointer;
         }
-          .party{
+            .party{
                 background-color: #ffe600;
                 color: #333;
+                margin: 20px 0px 0px 0px;
+
+                &:hover{
+                    background-color: #ffe033;
+                }
+            }
+            .added{
+                background-color: #00cc71;
+                color: #333;
+                margin: 20px 0px 0px 0px;
+            }
+            .is-full{
+                background-color: rgb(251, 89, 89);
+                color: #333;
+                margin: 20px 0px 0px 0px;
             }
     }
 }

@@ -5,15 +5,15 @@
           <router-link :to="{ name: 'home' }"><img src="@/assets/logo.png" alt=""></router-link>
         </div>
         
-        
         <ul v-show="!mobile" class="navigation">
-          <!-- <transition name="fade" >
-          <li key="2" v-if="scrolledNav" class="nav-search" >
-           <PokeSearch
-            
-            />
-          </li></transition> -->
-          <li><router-link class="link" :to="{ name: 'home' }">Arena</router-link></li>
+          <li>
+            <PokeParty
+            @popFromParty="popFromParty"
+            @closeParty="closeParty"
+            :imageUrl="imageUrl"
+            :key="partyReload" />
+          </li>
+          <li><router-link class="link" :to="{ name: 'arena' }">Arena</router-link></li>
           <li><router-link class="link" :to="{ name: 'home' }">About us</router-link></li>
           <li><router-link class="link" :to="{ name: 'home' }">Contact</router-link></li>
         </ul>
@@ -31,19 +31,24 @@
   </header>
 </template>
 <script>
-  import PokeSearch from '@/components/poke-search.vue'
-
+import PokeSearch from '@/components/poke-search.vue'
+import PokeParty from '@/components/poke-party.vue'
 
  export default {
-   components:{
+  props:[
+    "imageUrl",
+  ],
+  components:{
      PokeSearch,
-   },
- data() {
+     PokeParty,
+  },
+  data() {
     return {
       scrolledNav: null,
       mobile:null,
       mobileNav:null,
       windowWidth: null,
+      partyReload:0,  
     };
   },
   created() {
@@ -51,14 +56,16 @@
     this.checkScreen()
   },
   mounted(){
-    window.addEventListener("scroll", this.updateScroll)
+    // window.addEventListener("scroll", this.updateScroll)
 
   },
   methods:{
     toggleMobileNav(){
       this.mobileNav = !this.mobileNav
     },
-
+    partyCmpReload(){
+      this.partyReload++
+    },
     updateScroll(){
       const scrollPosition = window.scrollY
       if(scrollPosition > 50){
@@ -67,7 +74,6 @@
       }
       this.scrolledNav = false;
     },
-
     checkScreen(){
       this.windowWidth = window.innerWidth
       if(this.windowWidth <= 750){
@@ -77,6 +83,14 @@
       this.mobile= false
       this.mobileNav = false
       return
+    },
+    closeParty(slots){
+      console.log('nav-bar',slots)
+      this.$emit('togglePartySlots',slots);
+    },
+    popFromParty(index){
+      this.$emit('spliceFromParty',index);
+      console.log('nav-bar-pop',index)
     }
   }
  };

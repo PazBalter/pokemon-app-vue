@@ -5,6 +5,7 @@
     @click="setPokemonUrl(pokemon.url)">
     <img :src="imageUrl +pokemon.id+'.png'" width="96" height="96" alt="">
     <h3>{{pokemon.name}}</h3>
+    <h3>{{pokemon.id}}#</h3>
     </article>
     <div class="scroll-trigger" ref="infinitescrolltrigger">
       <PulseLoader/>
@@ -47,7 +48,7 @@ export default {
         })
         .then((data) => {
           this.nextUrl = data.next;
-          data.results.forEach(pokemon => {
+          data.results.forEach(pokemon => { 
             pokemon.id = pokemon.url.split('/')
               .filter(function(part){ return !!part}).pop()
             this.pokemons.push(pokemon);

@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <NavBar/>
+    <NavBar :key="partyReload"
+      :imageUrl="imageUrl"
+      @togglePartySlots="togglePartySlots"
+      @spliceFromParty="spliceFromParty"
+     />
     <div class="space-maker"></div>
-    <PokeParty :key="partyReload"
-    :imageUrl="imageUrl"
-    />
-    <!-- :myPokemonsUrl="myPokemonsUrl" -->
     <PokeSearch class="home-search"
       :apiUrl="apiUrl"
       @setPokemonUrl="setPokemonUrl"/>
@@ -17,6 +17,7 @@
       v-if="showDetail"
       :pokemonUrl="pokemonUrl"
       :imageUrl="imageUrl"
+      :partySlots="partySlots"
       @closeDetail="closeDetail"
       @addParty="addParty"
       />
@@ -48,6 +49,7 @@ export default {
       pokemonUrl: '',
       showDetail: false,
       partyReload: 0 ,
+      partySlots:true,
       // myPokemonsUrl: null,
     }
   },
@@ -63,7 +65,6 @@ export default {
   }, 
   methods:{
     getApiUrl() {
-      console.log('get Api')
       return this.$store.getters.getPokeApiUrl;
     },
     getImageUrl() {
@@ -80,27 +81,38 @@ export default {
       this.pokemonUrl = '';
       this.showDetail = false;
     },
+    togglePartySlots(slots){
+      if(slots === 0 ){
+        this.partySlots = false;  
+      }else{
+        this.partySlots = true;  
+      }
+      // console.log("homeview closefunc",this.partySlots)
+    },
     addParty(pokemon){
       this.$store.commit({ type: "setMyPokemons", pokemon });
       this.partyCmpReload()
-    
       // this.myPokemonsUrl = this.getMyPokemons() 
       // console.log(this.myPokemonsUrl)
     },
+    spliceFromParty(index){
+      this.$store.commit({ type: "spliceIndexFromParty", index });
+      this.partyCmpReload()
+    }
   },
 }
 </script>
 
 <style lang="scss">
 .home{
-  background: radial-gradient(#156f99,#0A2E50);
+  min-height: 100vh; 
   
- .space-maker{
-   padding-top: 120px ;
- }
- .home-search{
-   padding-bottom: 20px 
- }
+.space-maker{
+  padding-top: 120px ;
+}
+.home-search{
+  padding-bottom: 20px 
+}
 }
 
  
