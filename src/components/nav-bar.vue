@@ -8,6 +8,7 @@
         <ul v-show="!mobile" class="navigation">
           <li>
             <PokeParty
+            @randomPokeMoves="randomPokeMoves"
             @popFromParty="popFromParty"
             @closeParty="closeParty"
             :imageUrl="imageUrl"
@@ -91,7 +92,11 @@ import PokeParty from '@/components/poke-party.vue'
     popFromParty(index){
       this.$emit('spliceFromParty',index);
       console.log('nav-bar-pop',index)
-    }
+    },
+    randomPokeMoves(pokeIdAndMoves){
+      this.$emit('randomPokeMoves',pokeIdAndMoves);
+    },
+
   }
  };
  </script>

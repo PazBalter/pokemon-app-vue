@@ -3,7 +3,8 @@
         <article class="party-slots" v-for="(pokemon ,index) in pokemons"
             :key="'poke'+ index">
             <div 
-            @mouseover="openHoverMenu(index)" @mouseleave="openHoverMenu(null)" 
+            @mouseover="openHoverMenu(index), movesIdCheck(pokemon.id,pokemon.moves.length)"
+            @mouseleave="openHoverMenu(null) , movesIdCheck(null)" 
             class="pokemon-slot">
                 <img class="party-poke-img" 
                 :src="imageUrl + pokemon.id+'.png'"
@@ -22,15 +23,11 @@
                                 width="140" height="140" alt="">   
                             </div>
                         </div>
-                        <div class="poke-moves">
-                            <div v-if="pokemon.moves.length>4" class="moves-top-row">
-                                <span> {{pokemon.moves[0].move.name}}</span>
-                                <span> {{pokemon.moves[1].move.name}}</span>
-                            </div>
-                            <div class="moves-bottom-row">
-                                <span> {{pokemon.moves[3].move.name}}</span>
-                                <span> {{pokemon.moves[2].move.name}}</span>
-                            </div>
+                        <div v-if="currPokeMoves" class="poke-moves">
+                            <span v-for="(num , index ) in currPokeMoves" :key="num+index" >
+                                <span v-if="num !== null">{{pokemon.moves[num].move.name}}</span>
+                                <span v-else>-</span>
+                            </span>
                         </div>
                     </div>
                     <div v-show="!side" class="switch-back">
@@ -42,7 +39,7 @@
                                     :key="'value'+index">{{value.type.name}}
                                  </div>
                             </li>
-                            <li>Randomized Attacks</li>
+                            <li @click="randomPokeMoves(pokemon.id,pokemon.moves.length)"  >Randomized Attacks</li>
                             <li v-if="!showOption" @click="showOption = !showOption">Remove From Party</li>
                             <li v-else class="row-li-option" :class="{ 'show-menu' : showOption }">
                                 <div @click="popFromParty(index)">Remove</div>
@@ -80,15 +77,20 @@ export default {
         return{
             slots: 3,
             pokemons:[],
+            pokemonsMoves:[],
+            currPokeMoves:null,
             cardUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/",
             showMenu: null,
             side:true,
             showOption:false,
+            myPokeMoves:[]
            
         }
     },
     created(){
         this.pokemons = this.getMyPokemons()
+        this.pokemonsMoves = this.getMyPokemonsMoves()
+          console.log('myMoves:',this.pokemonsMoves)
         this.checkSlots()
        
     },
@@ -100,7 +102,10 @@ export default {
             return this.$store.getters.getMyPokemons;
         },
         getMySlots(){
-            return this.$store.getter.getMySlots;
+            return this.$store.getters.getMySlots;
+        },
+        getMyPokemonsMoves(){
+            return this.$store.getters.getMyPokemonsMoves
         },
         checkSlots(){
             this.slots -= this.pokemons.length
@@ -116,6 +121,21 @@ export default {
         popFromParty(index){
             this.$emit('popFromParty',index);
         },
+        randomPokeMoves(id,moveLength){
+            this.$emit('randomPokeMoves',{id,moveLength})
+        },
+        movesIdCheck(id){
+          this.pokemonsMoves.forEach(pokeMoves=>{
+            if(pokeMoves.pokeId === id){
+                this.currPokeMoves = pokeMoves.moves
+            }else{
+                return null
+            }
+            
+          });
+        
+
+        }
     }
 }
 </script>
@@ -221,11 +241,16 @@ export default {
                 border: 6px solid #2c3e50; 
                 border-radius: 3px 0px 0px 0px;
             }
+            .poke-moves-table{
+                display: grid;
+                grid-template-areas: 1fr 1fr;
+            }
             .poke-moves{
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 justify-content: center;
-                align-items: center;
+                align-items: flex-start;
+                flex-wrap: wrap;
                 padding: 10px;
                 background-color: #2c3e50;
                 border-radius: 0px 0px 3px 3px;

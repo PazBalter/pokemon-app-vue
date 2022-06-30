@@ -4,6 +4,7 @@
       :imageUrl="imageUrl"
       @togglePartySlots="togglePartySlots"
       @spliceFromParty="spliceFromParty"
+      @randomPokeMoves="randomPokeMoves"
      />
     <div class="space-maker"></div>
     <PokeSearch class="home-search"
@@ -98,6 +99,10 @@ export default {
     spliceFromParty(index){
       this.$store.commit({ type: "spliceIndexFromParty", index });
       this.partyCmpReload()
+    },
+    randomPokeMoves(pokeIdAndMoves){
+      console.log('home=',pokeIdAndMoves)
+      this.$store.commit({type: "setRandomMoves" , pokeIdAndMoves})
     }
   },
 }

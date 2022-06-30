@@ -2,7 +2,8 @@
 export const utilService = {
     delay,
     getRandomInt,
-    makeId
+    makeId,
+    GenrateArrUniqeNum
 }
 
 function delay(ms = 1500) {
@@ -24,4 +25,13 @@ function makeId(length = 5) {
         txt += possible.charAt(Math.floor(Math.random() * possible.length));
     }
     return txt;
+}
+
+function GenrateArrUniqeNum(num){
+    var arr = [];
+    while(arr.length < 4){
+        var r = Math.floor(Math.random() * num) + 1;
+        if(arr.indexOf(r) === -1) arr.push(r);
+    }
+    return arr
 }

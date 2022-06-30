@@ -11,6 +11,7 @@
     :apiUrl="apiUrl"
     :pokeMovesUrl="pokeMovesUrl"
     />
+    
     </section>
 </template>
 

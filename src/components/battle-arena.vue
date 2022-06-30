@@ -1,18 +1,31 @@
 <template>
     <section class="battle-arena">
         <div class="space-maker"></div>
-       
+      
         <div>
+        
             <button @click="makeNewEnemy"> NEW ENEMY</button>
             <button @click="submitPokemons"> SUBMIT POKEMONS</button>
         </div>
         <div class="battle-container">
             <div class="enemy-pos">
-                <div v-if="enemyPokemon.length > 0" class="enemy-poke-img">
-                    <div class="pipi">
-                        <img v-if=" enemyPokemon[0].height > 20" :style="{bottom: 20+'px'}" :src="imageUrl + enemyPokemon[0].id+'.png'" alt="">
-                        <img v-else :style="{bottom: enemyPokemon[0].height+'px'}" :src="imageUrl + enemyPokemon[0].id+'.png'" alt="">
+                <div class="enemy-status">
+                    <PokeStats :key="enemyFront"
+                    :enemyFrontPoke="enemyFrontPoke" />
+                </div>
+                
+                <div  class="enemy-poke-img">
+                    <div  v-if="enemyPokemon.length > 0">
+                        <div v-if="enemyFrontPoke.height > 10"  class="pipi">
+                            <img v-if=" enemyFrontPoke.height > 20" :style="{bottom: 25+'px'}" :src="imageUrl + enemyFrontPoke.id+'.png'" alt="">
+                            <img v-else :style="{bottom: 20+'px'}" :src="imageUrl + enemyFrontPoke.id+'.png'" alt="">
+                        </div>
+                    <div class="pipi" v-else>
+                        <img :style="{bottom: 20+'px'}" :src="imageUrl + enemyFrontPoke.id+'.png'" alt="">
                     </div>
+                    </div>
+                 
+                        
                 </div>
             </div>
             <div class="user-pos">
@@ -31,21 +44,27 @@
                         :src="userPokemon[0].sprites.back_default">
                     </div>
                 </div>
-                <!-- <img src="@/assets/arena-user.png" alt=""> -->
+                <div class="user-status">
+                    <PokeStats
+                    :userFrontPoke="userFrontPoke"
+                    :key="userFront"/>
+                </div>
+                
+               
             </div>
         </div>
-        <!-- <div v-for="(pokemon ,index) in enemyPokemon"
-            :key="'poke'+index"
-            @click="setPokemonUrl(pokemon.url)">
-            <img :src="imageUrl +pokemon.id+'.png'" width="96" height="96" alt="">
-         
-        </div> -->
-       
+        
     </section>
 </template>
 
 <script>
+
+import PokeStats from './poke-stats.vue'
 export default {
+    components:{
+    PokeStats
+
+    },
     props: [  
         'imageUrl',
         'apiUrl',
@@ -58,14 +77,20 @@ export default {
             enemyPokemon:[],
             enemyPokemonId:['3/','6/','9/'],
             currentUrl:'',
+            enemyFrontPoke:{},
+            userFrontPoke:{},
+            userFront:0,
+            enemyFront:0
+            
         }   
     },
     created(){
         this.enemyPokemonId = this.getEnemy()
         this.currentUrl = this.apiUrl;
-        this.fetchDataEnemy()
+        this.makeNewEnemy()
         
-        
+
+       
     },
     methods:{
         submitPokemons(){
@@ -83,6 +108,7 @@ export default {
             this.$store.commit('makeNewEnemy')
             this.enemyPokemonId = this.getEnemy()
             this.fetchDataEnemy()
+           
         },
         fetchDataEnemy(){  
             this.enemyPokemon = []
@@ -92,15 +118,21 @@ export default {
             .then((res) =>{
                 if(res.status === 200)
                 return res.json();
+                
             })
             .then((data) => {
                 this.enemyPokemon.push(data);
+                this.enemyFrontPoke = this.enemyPokemon[0]
+                
+            
             })
             .catch((error) =>{
                 console.log(error);
             })
+            .then(()=>{
+                this.enemyFront++
+            })
             });
-           
         },
         fetchDataUser(){  
             this.userPokemon.forEach(pokemon => {
@@ -111,7 +143,8 @@ export default {
                 return res.json();
             })
             .then((data) => {
-                this.enemyPokemon.push(data);
+                this.userFrontPoke = this.userPokemon[0]
+                this.userFront++
             })
             .catch((error) =>{
                 console.log(error);
@@ -143,7 +176,7 @@ export default {
     .battle-container{
         width: 700px;
         height: 350px;
-        background: #d8d8f8;
+        background-image: url(@/assets/arena-backgorund.jpeg);
         
         display: flex;
         flex-direction: column;
@@ -156,33 +189,37 @@ export default {
             height: 62px;
             width: 127px;
             display: block;
-            background-image: url(@/assets/arena-enemy.png);
+            background-image: url(@/assets/grass-enemy.png);
             background-repeat: no-repeat;
             background-size: contain;
             margin: 100px 100px 0px 0px;
             display: flex;
             justify-content: center;
             align-items: center;
-            align-content: flex-end;
                 .pipi{
                     img{
                         position: relative;
-                       
-                        // bottom: 10px;  
+                        bottom: 200px;
+                        
                     }
-                //   background-color: black;
-                //   width: 30px;
-                //   height: 30px;  
+           
                 }
+            }
+
+            .enemy-status{
+                position: relative;
+                top: 20%;
+                right: 10px;
             }
         }
         .user-pos{
-            display: flex; 
+            display: flex;
+            align-items: flex-end; 
             .user-poke-img{
             width: 253px;
             height: 32px;
             display: block;
-            background-image: url(@/assets/arena-user.png);
+            background-image: url(@/assets/grass-user.png);
             background-repeat: no-repeat;
             background-size: contain;
             display: flex;
@@ -190,7 +227,6 @@ export default {
             align-items: flex-end;
             align-content: flex-end;  
                 .user-imgs-centered{
-                
                     img{
                         width: 150px;
                         height: 150px;
@@ -198,6 +234,11 @@ export default {
                         top: 20px;
                     }
                 }  
+            }
+
+            .user-status{
+                position: relative;
+                bottom: 100%;
             }
         }
     }
