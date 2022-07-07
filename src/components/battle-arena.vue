@@ -5,6 +5,7 @@
         <div>
         
             <button @click="makeNewEnemy"> NEW ENEMY</button>
+            <button @click="showStats"> SHOW STATS</button>
             <button @click="submitPokemons"> SUBMIT POKEMONS</button>
         </div>
         <div class="battle-container">
@@ -109,6 +110,9 @@ export default {
             this.enemyPokemonId = this.getEnemy()
             this.fetchDataEnemy()
            
+        },
+        showStats(){
+            console.log(this.$store.getters.getMyPokemonsStats)
         },
         fetchDataEnemy(){  
             this.enemyPokemon = []

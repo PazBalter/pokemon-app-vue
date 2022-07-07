@@ -42,7 +42,6 @@ export default new Vuex.Store({
       return state.slots;
     },
     getEnemy(state){
-      console.log(state.enemyPokemonsId)
       return state.enemyPokemonsId;
     },
 
@@ -55,9 +54,10 @@ export default new Vuex.Store({
         state.myPokemonsMoves.push(
           movesService.createPokeMoves(pokemon.id,pokemon.moves.length)
         )
-        state.myPokemonsMoves.push(
+        state.myPokemonsStats.push(
           statsService.CreateStatObject(pokemon.stats)
         )
+        console.log(state.myPokemonsStats)
       }else{
         state.slots = false 
       }
@@ -70,7 +70,6 @@ export default new Vuex.Store({
       state.enemyPokemonsId.forEach((id,index) =>{
         state.enemyPokemonsId[index] =
           utilService.getRandomInt(state.minPokemons,state.maxPokemons).toString() + '/'
-          console.log(utilService.makeId())
       });
     },
     setRandomMoves(state,{pokeIdAndMoves}){

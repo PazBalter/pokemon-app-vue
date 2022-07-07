@@ -90,7 +90,6 @@ export default {
     created(){
         this.pokemons = this.getMyPokemons()
         this.pokemonsMoves = this.getMyPokemonsMoves()
-          console.log('myMoves:',this.pokemonsMoves)
         this.checkSlots()
        
     },
@@ -109,7 +108,7 @@ export default {
         },
         checkSlots(){
             this.slots -= this.pokemons.length
-            console.log("poke-slots",this.slots)
+            // console.log("poke-slots",this.slots)
             this.closeParty() 
         },
         closeParty(){

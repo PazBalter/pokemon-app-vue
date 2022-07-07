@@ -60,7 +60,6 @@ export default {
             }else{
                 this.partySlots = true;  
             }
-            // console.log("homeview closefunc",this.partySlots)
         },
         spliceFromParty(index){
             this.$store.commit({ type: "spliceIndexFromParty", index });

@@ -3,7 +3,7 @@
 export const statsService = {
     CreateStatObject,
 }
-const IV = 4;
+const IV = 8;
 const LEVEL = 100;
 const MAX_EV = 510;
 const STATOBJECT=[
@@ -32,15 +32,6 @@ const STATOBJECT=[
         points:0
     },
 ]
-var garchomp = {
-    hp:	108,
-    attack:130,
-    defense:95,
-    specialAttack:80,
-    specialDefense:85,
-    speed:102
-}
-
 
 function CreateStatObject(baseStats){
     var pokeStat = STATOBJECT 
@@ -58,6 +49,9 @@ function CreateStatObject(baseStats){
 
 
 function buildHPstat(baseStat,EV){
+    if(baseStat === 1){
+        return 1;
+    }
     var hp = Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+LEVEL+10
     return hp
 }

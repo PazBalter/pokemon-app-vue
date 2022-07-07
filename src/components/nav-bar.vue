@@ -86,7 +86,6 @@ import PokeParty from '@/components/poke-party.vue'
       return
     },
     closeParty(slots){
-      console.log('nav-bar',slots)
       this.$emit('togglePartySlots',slots);
     },
     popFromParty(index){
