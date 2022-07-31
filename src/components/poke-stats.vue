@@ -10,9 +10,9 @@
             </div>
             </div>
         </div>
-        <button @click="changeMoreHP">cahnge</button>
+        <!-- <button @click="changeMoreHP">cahnge</button>
         <button @click="changeLessHP">cahnge</button>
-        <button @click="changeLesserHP">cahnge</button>
+        <button @click="changeLesserHP">cahnge</button> -->
     </section>
 </template>
 

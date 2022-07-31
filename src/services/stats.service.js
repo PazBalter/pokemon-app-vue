@@ -2,6 +2,7 @@
 // https://pokeapi.co/api/v2/pokemon/  POKE_URL
 export const statsService = {
     CreateStatObject,
+    BasePointsummary,
 }
 const IV = 8;
 const LEVEL = 100;
@@ -34,9 +35,9 @@ const STATOBJECT=[
 ]
 
 function CreateStatObject(baseStats){
-    var pokeStat = STATOBJECT 
-    const maxBP = summaryMaxBasePoint(baseStats)
-    const EV = makeEVPoints(baseStats,maxBP)
+    const pokeStat = STATOBJECT 
+    const totalBP = BasePointsummary(baseStats)
+    const EV = makeEVPoints(baseStats,totalBP)
     pokeStat.forEach((stat,index)=>{
         if(index === 0){
             pokeStat[index].points = buildHPstat(baseStats[index].base_stat,EV[index].points)
@@ -52,25 +53,21 @@ function buildHPstat(baseStat,EV){
     if(baseStat === 1){
         return 1;
     }
-    var hp = Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+LEVEL+10
-    return hp
+    return  Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+LEVEL+10;
 }
 
 function buildOtherStat(baseStat,EV){
-    var stat = Math.floor((Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+5))
-    return stat
+    return Math.floor((Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+5));
 }
-function summaryMaxBasePoint(baseStats){
-    var maxBasePoints = 0
-    baseStats.forEach(stat => {
-        maxBasePoints = maxBasePoints + stat.base_stat
-    });
-    return maxBasePoints
+
+function BasePointsummary(baseStats){
+    return baseStats.reduce( (acc, stat) => acc + stat.base_stat , 0);
 }
-function makeEVPoints(baseStats,maxBP){
-    var ev = STATOBJECT
+
+function makeEVPoints(baseStats,totalBP){
+    const ev = STATOBJECT
     ev.forEach((element,index) =>{
-        element.points = Math.floor(MAX_EV*(baseStats[index].base_stat/maxBP)) 
+        element.points = Math.floor(MAX_EV*(baseStats[index].base_stat/totalBP)) 
     })
     return ev
     

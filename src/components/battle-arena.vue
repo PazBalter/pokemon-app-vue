@@ -3,8 +3,8 @@
         <div class="space-maker"></div>
       
         <div>
-        
-            <button @click="makeNewEnemy"> NEW ENEMY</button>
+            <button @click="setNewTrainer"> LEVEL 1 ENEMY </button>
+            <button @click="makeNewEnemy"> NEW ENEMY </button>
             <button @click="showStats"> SHOW STATS</button>
             <button @click="submitPokemons"> SUBMIT POKEMONS</button>
         </div>
@@ -61,6 +61,7 @@
 <script>
 
 import PokeStats from './poke-stats.vue'
+
 export default {
     components:{
     PokeStats
@@ -81,7 +82,8 @@ export default {
             enemyFrontPoke:{},
             userFrontPoke:{},
             userFront:0,
-            enemyFront:0
+            enemyFront:0,
+            opponent:null,
             
         }   
     },
@@ -89,11 +91,38 @@ export default {
         this.enemyPokemonId = this.getEnemy()
         this.currentUrl = this.apiUrl;
         this.makeNewEnemy()
-        
-
-       
     },
+    computed:{
+        //     setTrainer(){
+        //     this.opponent =  this.$store.getters.getEnemyTrainer
+        //     console.log('computed: ',this.opponent)
+        // },
+    },
+
     methods:{
+        async setNewTrainer(){
+            try {           
+                await this.setNewTrainerByLevel()
+                this.opponent = this.$store.getters.getEnemyTrainer
+                
+            } catch (error) {
+               console.log(error) 
+            }
+            finally{
+                console.log('opponent: ',this.opponent)
+                this.enemyPokemonId = this.opponent.pokemons.map( poke =>
+                    poke.id
+                )
+                console.log( this.enemyPokemonId)
+                this.fetchDataEnemy()
+                 this.enemyFront++
+            }
+          
+        },
+        async setNewTrainerByLevel(){
+            var level = 1
+            await this.$store.dispatch({ type: "setNewEnemyTrainer", level });
+        },
         submitPokemons(){
             this.userPokemon = this.getMyPokemons()
             this.fetchDataUser()
@@ -127,8 +156,6 @@ export default {
             .then((data) => {
                 this.enemyPokemon.push(data);
                 this.enemyFrontPoke = this.enemyPokemon[0]
-                
-            
             })
             .catch((error) =>{
                 console.log(error);
@@ -161,10 +188,7 @@ export default {
         
            
     },
-    computed:{
-       
-    },
-
+  
 }
 </script>
 

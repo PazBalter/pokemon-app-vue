@@ -7,10 +7,10 @@
                  type="text" v-model="searchValue">
                 <div v-if="pokeOptions" class="dropdown-search">
                     <div class="names-buttons"
-                        v-for="(value, index) in pokeOptions"
+                        v-for="(value, index) in pokeSearchArr"
                         :key="'value'+index"
-                        @click="clickName(pokeOptions[index])">
-                        {{pokeOptions[index]}}
+                        @click="clickName(pokeSearchArr[index])">
+                        {{pokeSearchArr[index]}}
                     </div>
                 </div>
             </form>
@@ -31,7 +31,7 @@ export default {
         return{
             searchValue: '',
             nextUrl:'',
-            valueArr:[],
+            pokeSearchArr:[],
             currentUrl:'',
             pokeOptions:null,
             clickedPoke:null
@@ -40,17 +40,19 @@ export default {
     watch:{
         searchValue(){
             this.pokeOptions = null;
-            this.valueArr = [];
+            this.pokeSearchArr = [];
             if(this.searchValue !== '' && this.searchValue.toLowerCase() !== this.clickedPoke ){
                 this.searchPokeByName()
             }else{
-                return
+                this.pokeOptions = null;
+                this.pokeSearchArr = [];
+                return ;
             }
         }   
     },
     methods:{
         dropdownOn(){
-             return(this.pokeOptions? 0 : 3 )
+            return(this.pokeOptions? 0 : 3 )
         },
         clickName(pokeName){
             this.clickedPoke = pokeName
@@ -58,13 +60,28 @@ export default {
             this.setPokemonUrl()
         },
         searchPokeByName:_.debounce(function(){
-        this.pokeOptions = this.moreSearch()
+            if(this.searchValue !== ''){
+                this.moreSearch()
+                this.pokeOptions = true
+            }else{
+                this.pokeOptions = null
+            }
         }, 1000),
         moreSearch(){
             this.currentUrl = this.apiUrl
             this.fetchThisData() 
-            return this.valueArr 
+            return this.pokeSearchArr 
         },
+        // async fetchNewData(){
+        //     try {
+        //         let result = await fetch(this.currentUrl);
+        //         let data = await result.json();
+        //         data.results
+        //     } catch (error) {
+                
+        //     }
+          
+        // },
         fetchThisData(){
             let req = new Request(this.currentUrl);
              fetch(req)
@@ -77,8 +94,8 @@ export default {
                 data.results.forEach(pokemon => { 
                     if(pokemon.name.substring(0,this.searchValue.length).includes(this.searchValue.toLowerCase())){
                     
-                        if(this.valueArr.length < 7){
-                            this.valueArr.push(pokemon.name)
+                        if(this.pokeSearchArr.length < 7){
+                            this.pokeSearchArr.push(pokemon.name)
                         }else{
                         console.log('stop-me') 
                         } 
@@ -89,10 +106,10 @@ export default {
                 console.log(error);
             }) 
             .then(()=>{
-                if(this.valueArr.length < 7){
+                if(this.pokeSearchArr.length < 7){
                   this.next()  
                 }else{
-                    // console.log(this.valueArr)
+                    // console.log(this.pokeSearchArr)
                 }
             })
            

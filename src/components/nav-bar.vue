@@ -12,7 +12,8 @@
             @popFromParty="popFromParty"
             @closeParty="closeParty"
             :imageUrl="imageUrl"
-            :key="partyReload" />
+             />
+            <!-- :key="partyReload" -->
           </li>
           <li><router-link class="link" :to="{ name: 'arena' }">Arena</router-link></li>
           <li><router-link class="link" :to="{ name: 'home' }">About us</router-link></li>

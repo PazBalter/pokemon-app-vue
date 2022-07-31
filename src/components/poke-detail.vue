@@ -73,29 +73,48 @@ export default{
         
     },
     methods:{
-        fetchData(){   
-        let req = new Request(this.pokemonUrl);
-        fetch(req)
-            .then((res) =>{
-                if(res.status === 200)
-                return res.json();
-            })
-            .then((data) => {
+        async fetchData(){
+            try {
+                let result = await fetch(this.pokemonUrl);
+                let data = await result.json();
                 this.pokemon = data;
                 this.show = true;
                 this.checkId() 
-            })
-            .catch((error) =>{
+            } catch (error) {
                 console.log(error);
-            }) 
-           
+            }
+          
         },
+        // fetchData(){   
+        // let req = new Request(this.pokemonUrl);
+        // fetch(req)
+        //     .then((res) =>{
+        //         if(res.status === 200)
+        //         return res.json();
+        //     })
+        //     .then((data) => {
+        //         this.pokemon = data;
+        //         this.show = true;
+        //         this.checkId() 
+        //     })
+        //     .catch((error) =>{
+        //         console.log(error);
+        //     }) 
+           
+        // },
         closeDetail(){
             this.$emit('closeDetail');
         },
-        addParty(){
-            this.$emit("addParty",this.pokemon)
+        async addParty(){
+            try {
+            const id = this.pokemon.id
+            // this.$emit("addParty",this.pokemon)
+            await this.$store.dispatch({ type: "addpokemon", id });
             this.checkId()
+            } catch (error) {
+                console.log(error)
+            }
+       
         },
         checkId(){
             const ChoosenPokemons = this.$store.getters.getMyPokemons
