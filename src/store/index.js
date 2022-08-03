@@ -62,12 +62,12 @@ export default new Vuex.Store({
       state.partySlots = state.partySlots + 1
      
     },
-    // makeNewEnemy(state){
-    //   state.enemyPokemonsId.forEach((id,index) =>{
-    //     state.enemyPokemonsId[index] =
-    //       utilService.getRandomInt(state.minPokemons,state.maxPokemons).toString() + '/'
-    //   });
-    // },
+    makeNewEnemy(state){
+      state.enemyPokemonsId.forEach((id,index) =>{
+        state.enemyPokemonsId[index] =
+          utilService.getRandomInt(state.minPokemons,state.maxPokemons).toString() + '/'
+      });
+    },
     setRandomMoves(state,{pokeIdAndMoves}){
       state.myPokemonsMoves.forEach((id,index)=>{
         if(state.myPokemonsMoves[index].pokeId === pokeIdAndMoves.id){
