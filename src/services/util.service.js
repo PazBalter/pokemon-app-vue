@@ -30,7 +30,7 @@ function makeId(length = 5) {
 function GenrateArrUniqeNum(num){
     var arr = [];
     while(arr.length < 4){
-        var r = Math.floor(Math.random() * num) + 1;
+        var r = Math.floor(Math.random() * num) + 0;
         if(arr.indexOf(r) === -1) arr.push(r);
     }
     return arr

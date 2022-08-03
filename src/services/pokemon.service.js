@@ -13,14 +13,14 @@ const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/'
 const GEN_4 = 494
 const GEM_5 = 649
 
-const POKE_OBJECT = {
-    id:0,
-    name:'',
-    stats:[],
-    moves:[],
-    types:[]
+// const POKE_OBJECT = {
+//     id:0,
+//     name:'',
+//     stats:[],
+//     moves:[],
+//     types:[]
 
-}
+// }
 
 const ALL_POKE_STATS = {
     min:0,
@@ -31,14 +31,18 @@ const ALL_POKE_STATS = {
 
 async function CreatePokeObject(id = 0){
     try{
-        const pokemon = POKE_OBJECT
+        const pokemon =  {
+            id:0,
+            name:'',
+            stats:[],
+            moves:[],
+            types:[]
+        }
         pokemon.id = id === 0 ? utilService.getRandomInt(1,850) : id
-        const dataJson = await fetchPokeDataById(pokemon.id)
+        let dataJson = await fetchPokeDataById(pokemon.id)
         pokemon.name = dataJson.name
         pokemon.stats = statsService.CreateStatObject(dataJson.stats)
-        // pokemon.moves = movesService.createPokeMoves(dataJson.id,dataJson.moves.length)
         pokemon.moves = await movesService.createPokeMoves(dataJson.moves)
-        console.log(pokemon.moves)
         pokemon.types = pokeTypeArray(dataJson.types)
         return pokemon;
     }catch(error){
@@ -62,10 +66,11 @@ async function createPokeObjectByLevel(level = 0){
         var maxBP = statsService.BasePointsummary(pokemon.stats)
         while(maxBP){
             if(maxBP > baseStat.min && maxBP < baseStat.max){
-                return PokeObject(pokemon)
+                const pokeObj = await PokeObject(pokemon)
+                console.log('pokeObj: ',pokeObj )
+                return pokeObj
             }else{
-
-                var pokemon = await fetchPokeDataById(utilService.getRandomInt(1,GEN_4))
+                pokemon = await fetchPokeDataById(utilService.getRandomInt(1,GEN_4))
                 maxBP = statsService.BasePointsummary(pokemon.stats)
             }
         }
@@ -76,15 +81,15 @@ async function createPokeObjectByLevel(level = 0){
 
 }
 
-function PokeObject(pokemon){
-    const pokeObject = {
+async function PokeObject(pokemon){
+    let pokeObject = {
         id:pokemon.id,
         name:pokemon.name,
-        stats:statsService.CreateStatObject(pokemon.stats),
-        moves:movesService.createPokeMoves(pokemon.id,pokemon.moves.length),
+        stats: statsService.CreateStatObject(pokemon.stats),
+        moves: await movesService.createPokeMoves(pokemon.moves),
         types:pokeTypeArray(pokemon.types)
-
     }
+    console.log('pokeObject.moves: ',pokeObject.moves)
     return pokeObject
 }
 
@@ -116,6 +121,6 @@ function minMaxLevelStats(level){
 }
 
 function pokeTypeArray(typesObj){
-    var arrTypesName = typesObj.map(slot => slot.type.name)
+    const arrTypesName = typesObj.map(slot => slot.type.name)
     return arrTypesName
 }

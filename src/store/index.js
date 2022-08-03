@@ -18,9 +18,7 @@ export default new Vuex.Store({
     pokeApiUrl:'https://pokeapi.co/api/v2/pokemon/',
     pokeMovesUrl:'https://pokeapi.co/api/v2/move/',
     myPokemons: [],
-    myPokemonsMoves:[],
-    myPokemonsStats:[],
-    slots:true,
+    partySlots:3,
     enemyPokemonsId:['3/','6/','9/'],
     enemyTrainer:[],
   },
@@ -34,17 +32,11 @@ export default new Vuex.Store({
     getMyPokemons(state) {
       return state.myPokemons;
     },
-    getMyPokemonsMoves(state){
-      return state.myPokemonsMoves;
-    },
-    getMyPokemonsStats(state){
-      return state.myPokemonsStats;
-    },
     getPokeMovesUrl(state){
       return state.pokeMovesUrl;
     },
-    getMySlots(){
-      return state.slots;
+    getSlots(state){
+      return state.partySlots;
     },
     getEnemy(state){
       return state.enemyPokemonsId;
@@ -57,30 +49,25 @@ export default new Vuex.Store({
   mutations: {
     setMyPokemons(state,{pokemon}){
       if(state.myPokemons.length <3){
-       console.log(pokemon.id)
-        state.slots = true
-        state.myPokemons.push(pokeService.CreatePokeObject(pokemon.id))
-        // state.myPokemonsMoves.push(
-        //   movesService.createPokeMoves(pokemon.id,pokemon.moves.length)
-        // )
-        // state.myPokemonsStats.push(
-        //   statsService.CreateStatObject(pokemon.stats)
-        // )
-        console.log(state.myPokemonsStats)
+        state.partySlots = state.partySlots - 1
+        state.myPokemons.push(pokemon)
+        // console.log('mutains 2: mypokemon',state.myPokemons)
       }else{
-        state.slots = false 
+        state.partySlots = 0
+       
       }
     },
     spliceIndexFromParty(state,{index}){
       state.myPokemons.splice(index,1)
+      state.partySlots = state.partySlots + 1
      
     },
-    makeNewEnemy(state){
-      state.enemyPokemonsId.forEach((id,index) =>{
-        state.enemyPokemonsId[index] =
-          utilService.getRandomInt(state.minPokemons,state.maxPokemons).toString() + '/'
-      });
-    },
+    // makeNewEnemy(state){
+    //   state.enemyPokemonsId.forEach((id,index) =>{
+    //     state.enemyPokemonsId[index] =
+    //       utilService.getRandomInt(state.minPokemons,state.maxPokemons).toString() + '/'
+    //   });
+    // },
     setRandomMoves(state,{pokeIdAndMoves}){
       state.myPokemonsMoves.forEach((id,index)=>{
         if(state.myPokemonsMoves[index].pokeId === pokeIdAndMoves.id){
@@ -93,14 +80,10 @@ export default new Vuex.Store({
    
   },
   actions: {
-    async addpokemon({state},{id}){
-      try {
-        const pokeObj = await pokeService.CreatePokeObject(id)
-        state.myPokemons.push(pokeObj)
-      } catch (error) {
-        console.log(error)
-      }
-     
+    async addPokemon({commit},{id}){
+      const pokemon = await pokeService.CreatePokeObject(id)
+      commit({type: 'setMyPokemons',pokemon})
+
     },
     async setNewEnemyTrainer({state},{ level }){
       try {

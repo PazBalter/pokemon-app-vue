@@ -93,10 +93,7 @@ export default {
         this.makeNewEnemy()
     },
     computed:{
-        //     setTrainer(){
-        //     this.opponent =  this.$store.getters.getEnemyTrainer
-        //     console.log('computed: ',this.opponent)
-        // },
+     
     },
 
     methods:{
@@ -113,7 +110,6 @@ export default {
                 this.enemyPokemonId = this.opponent.pokemons.map( poke =>
                     poke.id
                 )
-                console.log( this.enemyPokemonId)
                 this.fetchDataEnemy()
                  this.enemyFront++
             }

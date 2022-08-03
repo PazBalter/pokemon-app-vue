@@ -7,35 +7,35 @@ export const statsService = {
 const IV = 8;
 const LEVEL = 100;
 const MAX_EV = 510;
-const STATOBJECT=[
-    {
-        statName:'hp',
-        points:0
-    },
-    {
-        statName:'attack',
-        points:0
-    },
-    {
-        statName:'defense',
-        points:0
-    },
-    {
-        statName:'specialAttack',
-        points:0
-    },
-    {
-        statName:'specialDefense',
-        points:0
-    },
-    {
-        statName:'speed',
-        points:0
-    },
-]
+
 
 function CreateStatObject(baseStats){
-    const pokeStat = STATOBJECT 
+    const pokeStat = [
+        {
+            statName:'hp',
+            points:0
+        },
+        {
+            statName:'attack',
+            points:0
+        },
+        {
+            statName:'defense',
+            points:0
+        },
+        {
+            statName:'specialAttack',
+            points:0
+        },
+        {
+            statName:'specialDefense',
+            points:0
+        },
+        {
+            statName:'speed',
+            points:0
+        },
+    ]
     const totalBP = BasePointsummary(baseStats)
     const EV = makeEVPoints(baseStats,totalBP)
     pokeStat.forEach((stat,index)=>{
@@ -65,7 +65,32 @@ function BasePointsummary(baseStats){
 }
 
 function makeEVPoints(baseStats,totalBP){
-    const ev = STATOBJECT
+    const ev = [
+        {
+            statName:'hp',
+            points:0
+        },
+        {
+            statName:'attack',
+            points:0
+        },
+        {
+            statName:'defense',
+            points:0
+        },
+        {
+            statName:'specialAttack',
+            points:0
+        },
+        {
+            statName:'specialDefense',
+            points:0
+        },
+        {
+            statName:'speed',
+            points:0
+        },
+    ]
     ev.forEach((element,index) =>{
         element.points = Math.floor(MAX_EV*(baseStats[index].base_stat/totalBP)) 
     })

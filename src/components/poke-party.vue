@@ -41,9 +41,9 @@
             </div>
             <div  class="poke-moves">
               <span v-for="(move, index) in pokemon.moves" :key="move + index">
-                <span v-if="move.moveId !== 0">{{
-                  move.moveId
-                }}</span>
+                <span v-if="move.moveName !== ''">
+                  {{move.moveName}}
+                  </span>
                 <span v-else>-</span>
               </span>
             </div>
@@ -87,7 +87,7 @@
       </div>
     </article>
 
-    <article class="party-slots" v-for="slots in slots" :key="slots">
+    <article class="party-slots" v-for="slots in 3 - pokemons.length" :key="slots">
       <div class="pokeball-slot">
         <img src="@/assets/pokeball.png" width="40" height="40" alt="" />
       </div>
@@ -100,15 +100,11 @@ export default {
   props: ["myPokemonsUrl", "imageUrl"],
   data() {
     return {
-      slots: 3,
-    //   pokemons: [],
-    //   pokemonsMoves: [],1
       currPokeMoves: null,
       cardUrl:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/",
       showMenu: null,
       side: true,
       showOption: false,
-      // myPokeMoves: [],
     };
   },
   created() {
@@ -120,17 +116,11 @@ export default {
     pokemons() {
         return this.$store.getters.getMyPokemons;
     },
-    // getMySlots(){
-    //     return this.$store.getters.getMySlots;
-    // },
-    // pokemonsMoves(){
-    //     return this.$store.getters.getMyPokemonsMoves
-    // },
+    getSlots(){
+        return this.$store.getters.getSlots;
+    },
   },
   methods: {
-    // getMyPokemons() {
-    //   return this.$store.getters.getMyPokemons;
-    // },
     getMySlots() {
       return this.$store.getters.getMySlots;
     },
@@ -152,17 +142,8 @@ export default {
       this.$emit("popFromParty", index);
     },
     randomPokeMoves(id, moveLength) {
-      this.$emit("randomPokeMoves", { id, moveLength });
+      // this.$emit("randomPokeMoves", { id, moveLength });
     },
-    // movesIdCheck(id) {
-    //   this.pokemonsMoves.forEach((pokeMoves) => {
-    //     if (pokeMoves.pokeId === id) {
-    //       this.currPokeMoves = pokeMoves.moves;
-    //     } else {
-    //       return null;
-    //     }
-    //   });
-    // },
   },
 };
 </script>

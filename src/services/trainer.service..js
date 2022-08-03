@@ -7,10 +7,6 @@ export const trainerService = {
     CreateTrainer,
 }
 
-// const TRAINER = {
-//     difficulty: 0,
-//     pokemons:[],
-// }
 
 async function CreateTrainer(level = 0){
     try{
@@ -26,12 +22,12 @@ async function CreateTrainer(level = 0){
 async function trainerPokeTeam(level){
     try {
         const pokeTeam = []
-        while(pokeTeam.length < 3){
             pokeTeam.push( await pokeService.createPokeObjectByLevel(level))
-        }  
+            pokeTeam.push( await pokeService.createPokeObjectByLevel(level))
+            pokeTeam.push( await pokeService.createPokeObjectByLevel(level))
         return pokeTeam
     } catch (error) {
-        
+        console.log(error)
     }
     
 

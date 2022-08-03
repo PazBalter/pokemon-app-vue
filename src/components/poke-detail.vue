@@ -26,12 +26,12 @@
                     </div>
                 </div>
             <div v-if="checkedPokeId">
-                <button v-if="partySlots" class="detail-btn party" @click="addParty">Add Pokemon</button>  
-                <button v-if="!partySlots" class="detail-btn is-full">Party Is Full</button>  
+                <button v-if="partySlots" class="detail-btn party" @click.once="addParty">Add Pokemon</button>  
+                <button v-else class="detail-btn is-full">Party Is Full</button>  
             </div>
             <div  v-else>
                 <button v-if="partySlots" class="detail-btn added">Pokemon Added</button>
-                <button v-if="!partySlots" class="detail-btn is-full">Party Is Full</button>  
+                <button v-else class="detail-btn is-full">Party Full</button>  
             </div>
          
             </div>
@@ -53,7 +53,6 @@ export default{
     props:[
         'pokemonUrl',
         'imageUrl',
-        'partySlots'
     ],
     components:{
         PulseLoader
@@ -62,15 +61,25 @@ export default{
         return{
             slots: true,
             show: false,
-            checkedPokeId: true,
             pokemon: {},
 
         }
     },
     created(){
-        console.log(this.pokemonUrl)
         this.fetchData()
-        
+       
+    },
+    computed:{
+        partySlots : function(){
+            if(this.$store.getters.getSlots){
+                return true
+            }else{
+                return false
+            }
+        },
+        checkedPokeId(){
+           return this.checkId()
+        }
     },
     methods:{
         async fetchData(){
@@ -85,31 +94,14 @@ export default{
             }
           
         },
-        // fetchData(){   
-        // let req = new Request(this.pokemonUrl);
-        // fetch(req)
-        //     .then((res) =>{
-        //         if(res.status === 200)
-        //         return res.json();
-        //     })
-        //     .then((data) => {
-        //         this.pokemon = data;
-        //         this.show = true;
-        //         this.checkId() 
-        //     })
-        //     .catch((error) =>{
-        //         console.log(error);
-        //     }) 
-           
-        // },
         closeDetail(){
             this.$emit('closeDetail');
         },
         async addParty(){
             try {
             const id = this.pokemon.id
-            // this.$emit("addParty",this.pokemon)
-            await this.$store.dispatch({ type: "addpokemon", id });
+            this.checkId()
+            this.$store.dispatch({ type: "addPokemon", id });
             this.checkId()
             } catch (error) {
                 console.log(error)
@@ -118,7 +110,7 @@ export default{
         },
         checkId(){
             const ChoosenPokemons = this.$store.getters.getMyPokemons
-            this.checkedPokeId = ChoosenPokemons.every(this.compareId)
+            return ChoosenPokemons.every(this.compareId)
         },
         compareId(pokemon){
             return pokemon.id !== this.pokemon.id

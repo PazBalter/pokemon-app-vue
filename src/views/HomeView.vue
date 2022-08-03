@@ -1,8 +1,7 @@
 <template>
   <div class="home">
-    <NavBar :key="partyReload"
+    <NavBar 
       :imageUrl="imageUrl"
-      @togglePartySlots="togglePartySlots"
       @spliceFromParty="spliceFromParty"
       @randomPokeMoves="randomPokeMoves"
      />
@@ -18,9 +17,7 @@
       v-if="showDetail"
       :pokemonUrl="pokemonUrl"
       :imageUrl="imageUrl"
-      :partySlots="partySlots"
       @closeDetail="closeDetail"
-      @addParty="addParty"
       />
   </div>
 </template>
@@ -49,20 +46,12 @@ export default {
       apiUrl:'',
       pokemonUrl: '',
       showDetail: false,
-      partyReload: 0 ,
-      partySlots:true,
-      // myPokemonsUrl: null,
+      // partyReload: 0 ,
     }
   },
   created(){
    this.apiUrl = this.getApiUrl()
    this.imageUrl = this.getImageUrl()
-  //  this.myPokemons = this.getMyPokemons()
-
-  
-  },
-  mounted(){
-
   }, 
   methods:{
     getApiUrl() {
@@ -70,9 +59,6 @@ export default {
     },
     getImageUrl() {
       return this.$store.getters.getPokeImageUrl;
-    },
-    partyCmpReload(){
-      this.partyReload++
     },
     setPokemonUrl(url){
       this.pokemonUrl = url;
@@ -82,23 +68,8 @@ export default {
       this.pokemonUrl = '';
       this.showDetail = false;
     },
-    togglePartySlots(slots){
-      if(slots === 0 ){
-        this.partySlots = false;  
-      }else{
-        this.partySlots = true;  
-      }
-      // console.log("homeview closefunc",this.partySlots)
-    },
-    addParty(pokemon){
-      this.$store.commit({ type: "setMyPokemons", pokemon });
-      this.partyCmpReload()
-      // this.myPokemonsUrl = this.getMyPokemons() 
-      // console.log(this.myPokemonsUrl)
-    },
     spliceFromParty(index){
       this.$store.commit({ type: "spliceIndexFromParty", index });
-      this.partyCmpReload()
     },
     randomPokeMoves(pokeIdAndMoves){
       console.log('home=',pokeIdAndMoves)
