@@ -13,36 +13,44 @@ function CreateStatObject(baseStats){
     const pokeStat = [
         {
             statName:'hp',
-            points:0
+            points:0,
+            max:0
         },
         {
             statName:'attack',
-            points:0
+            points:0,
+            max:0
         },
         {
             statName:'defense',
-            points:0
+            points:0,
+            max:0
         },
         {
             statName:'specialAttack',
-            points:0
+            points:0,
+            max:0
         },
         {
             statName:'specialDefense',
-            points:0
+            points:0,
+            max:0
         },
         {
             statName:'speed',
-            points:0
+            points:0,
+            max:0
         },
     ]
     const totalBP = BasePointsummary(baseStats)
     const EV = makeEVPoints(baseStats,totalBP)
     pokeStat.forEach((stat,index)=>{
         if(index === 0){
-            pokeStat[index].points = buildHPstat(baseStats[index].base_stat,EV[index].points)
+            stat.points = buildHPstat(baseStats[index].base_stat,EV[index].points)
+            stat.max = buildHPstat(baseStats[index].base_stat,EV[index].points)
         }else{
-            pokeStat[index].points = buildOtherStat(baseStats[index].base_stat,EV[index].points)
+            stat.points = buildOtherStat(baseStats[index].base_stat,EV[index].points)
+            stat.max = buildHPstat(baseStats[index].base_stat,EV[index].points)
         }
     })
     return pokeStat
@@ -53,7 +61,7 @@ function buildHPstat(baseStat,EV){
     if(baseStat === 1){
         return 1;
     }
-    return  Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+LEVEL+10;
+    return Math.floor((2*baseStat+IV+Math.floor(EV/4))*LEVEL/100)+LEVEL+10;
 }
 
 function buildOtherStat(baseStat,EV){
@@ -91,8 +99,8 @@ function makeEVPoints(baseStats,totalBP){
             points:0
         },
     ]
-    ev.forEach((element,index) =>{
-        element.points = Math.floor(MAX_EV*(baseStats[index].base_stat/totalBP)) 
+    ev.forEach((stat,index) =>{
+        stat.points = Math.floor(MAX_EV*(baseStats[index].base_stat/totalBP)) 
     })
     return ev
     

@@ -11,16 +11,7 @@ export const pokeService = {
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/'  
 
 const GEN_4 = 494
-const GEM_5 = 649
-
-// const POKE_OBJECT = {
-//     id:0,
-//     name:'',
-//     stats:[],
-//     moves:[],
-//     types:[]
-
-// }
+const GEN_5 = 649
 
 const ALL_POKE_STATS = {
     min:0,
@@ -36,7 +27,8 @@ async function CreatePokeObject(id = 0){
             name:'',
             stats:[],
             moves:[],
-            types:[]
+            types:[],
+            height:0,
         }
         pokemon.id = id === 0 ? utilService.getRandomInt(1,850) : id
         let dataJson = await fetchPokeDataById(pokemon.id)
@@ -44,6 +36,7 @@ async function CreatePokeObject(id = 0){
         pokemon.stats = statsService.CreateStatObject(dataJson.stats)
         pokemon.moves = await movesService.createPokeMoves(dataJson.moves)
         pokemon.types = pokeTypeArray(dataJson.types)
+        pokemon.height = dataJson.height
         return pokemon;
     }catch(error){
         console.log(error);  
@@ -87,7 +80,8 @@ async function PokeObject(pokemon){
         name:pokemon.name,
         stats: statsService.CreateStatObject(pokemon.stats),
         moves: await movesService.createPokeMoves(pokemon.moves),
-        types:pokeTypeArray(pokemon.types)
+        types:pokeTypeArray(pokemon.types),
+        height: pokemon.height
     }
     console.log('pokeObject.moves: ',pokeObject.moves)
     return pokeObject

@@ -7,22 +7,23 @@
             <button @click="makeNewEnemy"> NEW ENEMY </button>
             <button @click="showStats"> SHOW STATS</button>
             <button @click="submitPokemons"> SUBMIT POKEMONS</button>
+            <button> {{opponentFrontPoke}}</button>
         </div>
         <div class="battle-container">
             <div class="enemy-pos">
                 <div class="enemy-status">
-                    <PokeStats :key="enemyFront"
-                    :enemyFrontPoke="enemyFrontPoke" />
+                    <PokeStats
+                     :opponentFrontPoke="opponentFrontPoke" />
                 </div>
                 
                 <div  class="enemy-poke-img">
-                    <div  v-if="enemyPokemon.length > 0">
-                        <div v-if="enemyFrontPoke.height > 10"  class="pipi">
-                            <img v-if=" enemyFrontPoke.height > 20" :style="{bottom: 25+'px'}" :src="imageUrl + enemyFrontPoke.id+'.png'" alt="">
-                            <img v-else :style="{bottom: 20+'px'}" :src="imageUrl + enemyFrontPoke.id+'.png'" alt="">
+                    <div  v-if="opponent.length">
+                        <div v-if="opponentFrontPoke"  class="pipi">
+                            <img v-if=" opponentFrontPoke.height > 20" :style="{bottom: 25+'px'}" :src="imageUrl + opponentFrontPoke.id+'.png'" alt="">
+                            <img v-else :style="{bottom: 20 +'px'}" :src="imageUrl + opponentFrontPoke.id+'.png'" alt="">
                         </div>
                     <div class="pipi" v-else>
-                        <img :style="{bottom: 20+'px'}" :src="imageUrl + enemyFrontPoke.id+'.png'" alt="">
+                        <img :style="{bottom: 20+'px'}" :src="imageUrl + opponentFrontPoke.id+'.png'" alt="">
                     </div>
                     </div>
                  
@@ -31,24 +32,24 @@
             </div>
             <div class="user-pos">
                 <div class="user-poke-img">
-                    <div  v-if="userPokemon.length > 0" class="user-imgs-centered">
-                        <div  v-if=" userPokemon[0].height > 5">
-                            <img  v-if=" userPokemon[0].height < 30"
-                                :style="{top: userPokemon[0].height+'px'}" 
-                                :src="userPokemon[0].sprites.back_default">
+                    
+                     <div  v-if="userPokemons.length" class="user-imgs-centered"> 
+                        <div  v-if=" userPokemons[0].height > 5">
+                            <img  v-if=" userPokemons[0].height < 30"
+                                :style="{top: userPokemons[0].height+'px'}" 
+                                :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${userPokemons[0].id}.png`">
                             <img  v-else 
                                 :style="{top: 30+'px'}" 
-                                :src="userPokemon[0].sprites.back_default">
+                                :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${userPokemons[0].id}.png`">
                         </div>
                         <img  v-else
                         :style="{top: 35+'px'}" 
-                        :src="userPokemon[0].sprites.back_default">
+                        :src="userPokemons[0].sprites.back_default">
                     </div>
                 </div>
                 <div class="user-status">
                     <PokeStats
-                    :userFrontPoke="userFrontPoke"
-                    :key="userFront"/>
+                    :userFrontPoke="userFrontPoke"/>
                 </div>
                 
                
@@ -74,55 +75,74 @@ export default {
     ],
     data(){
         return{
+            
             height:0,
-            userPokemon:[],
-            enemyPokemon:[],
-            enemyPokemonId:['3/','6/','9/'],
+            // userPokemons:[],
+            // enemyPokemon:[],
+            // enemyPokemonId:['3/','6/','9/'],
             currentUrl:'',
-            enemyFrontPoke:{},
-            userFrontPoke:{},
-            userFront:0,
-            enemyFront:0,
-            opponent:null,
+            opponentFrontPoke:{},
+            // userFrontPoke:{},
+            // userFront:0,
+            // enemyFront:0,
+            // opponent:null,
             
         }   
     },
     created(){
-        this.enemyPokemonId = this.getEnemy()
-        this.currentUrl = this.apiUrl;
-        this.makeNewEnemy()
+        // this.enemyPokemonId = this.getEnemy()
+        // this.currentUrl = this.apiUrl;
+        // this.makeNewEnemy()
     },
     computed:{
-     
+     opponent(){
+        return this.$store.getters.getOpponent;
+     },
+    //  opponentFrontPoke(){
+    //     return this.$store.getters.getOpponentFront;
+    //  },
+     userFrontPoke(){
+        return this.$store.getters.getUserFront;
+     },
+     userPokemons(){
+        return this.$store.getters.getMyPokemons;
+     }
     },
 
     methods:{
         async setNewTrainer(){
             try {           
                 await this.setNewTrainerByLevel()
-                this.opponent = this.$store.getters.getEnemyTrainer
-                
+                this.opponentFrontPoke = this.getOpponentFrontPoke()
+                  console.log('frontOpp: ',this.opponentFrontPoke)
+              
+                // this.opponent = this.$store.getters.getEnemyTrainer
+                // await this.fetchDataEnemy()
             } catch (error) {
                console.log(error) 
             }
             finally{
-                console.log('opponent: ',this.opponent)
-                this.enemyPokemonId = this.opponent.pokemons.map( poke =>
-                    poke.id
-                )
-                this.fetchDataEnemy()
-                 this.enemyFront++
+              
+                // this.enemyPokemonId = this.opponent.pokemons.map( poke =>
+                //     poke.id
+                // )
+                // this.fetchDataEnemy()
+                //  this.enemyFront++
             }
           
         },
+        getOpponentFrontPoke(){
+            return this.$store.getters.getOpponentFront;
+        },
         async setNewTrainerByLevel(){
-            var level = 1
-            await this.$store.dispatch({ type: "setNewEnemyTrainer", level });
+            let level = 1
+            await this.$store.dispatch({ type: "setNewOpponent", level });
+            // return this.$store.getters.getEnemyTrainer;
         },
         submitPokemons(){
-            this.userPokemon = this.getMyPokemons()
-            this.fetchDataUser()
-            console.log(this.userPokemon)
+            this.userPokemons = this.getMyPokemons()
+            // this.fetchDataUser()
+            console.log(this.userPokemons)
         },
         getMyPokemons() {
             return this.$store.getters.getMyPokemons;
@@ -140,29 +160,38 @@ export default {
             console.log(this.$store.getters.getMyPokemonsStats)
         },
         fetchDataEnemy(){  
-            this.enemyPokemon = []
-            this.enemyPokemonId.forEach(id => {
-            let req = new Request(this.currentUrl + id);
-            fetch(req)
-            .then((res) =>{
-                if(res.status === 200)
-                return res.json();
+            // try {
+            //     this.opponent.pokemons.forEach(poke => {})
+              
+           
+            // } catch (error) {
+            //     console.log(error)
+            // }
+
+
+            // this.opponent = []
+            // this.opponent.pokemons.forEach(poke => {
+            // let req = new Request(this.currentUrl + poke.id);
+            // fetch(req)
+            // .then((res) =>{
+            //     if(res.status === 200)
+            //     return res.json();
                 
-            })
-            .then((data) => {
-                this.enemyPokemon.push(data);
-                this.enemyFrontPoke = this.enemyPokemon[0]
-            })
-            .catch((error) =>{
-                console.log(error);
-            })
-            .then(()=>{
-                this.enemyFront++
-            })
-            });
+            // })
+            // .then((data) => {
+            //     this.enemyPokemon.push(data);
+            //     this.opponentFrontPoke = this.enemyPokemon[0]
+            // })
+            // .catch((error) =>{
+            //     console.log(error);
+            // })
+            // .then(()=>{
+            //     this.enemyFront++
+            // })
+            // });
         },
         fetchDataUser(){  
-            this.userPokemon.forEach(pokemon => {
+            this.userPokemons.forEach(pokemon => {
             let req = new Request(this.currentUrl + pokemon.id);
             fetch(req)
             .then((res) =>{
@@ -170,7 +199,7 @@ export default {
                 return res.json();
             })
             .then((data) => {
-                this.userFrontPoke = this.userPokemon[0]
+                this.userFrontPoke = this.userPokemons[0]
                 this.userFront++
             })
             .catch((error) =>{

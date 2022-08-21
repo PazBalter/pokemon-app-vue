@@ -20,7 +20,7 @@ export default new Vuex.Store({
     myPokemons: [],
     partySlots:3,
     enemyPokemonsId:['3/','6/','9/'],
-    enemyTrainer:[],
+    opponent:[],
   },
   getters: {
     getPokeImageUrl(state) {
@@ -41,8 +41,14 @@ export default new Vuex.Store({
     getEnemy(state){
       return state.enemyPokemonsId;
     },
-    getEnemyTrainer(state){
-      return state.enemyTrainer;
+    getOpponent(state){
+      return state.opponent;
+    },
+    getOpponentFront(state){
+      return state.opponent.pokemons[0]
+    },
+    getUserFront(state){
+      return state.myPokemons[0]
     },
 
   },
@@ -51,7 +57,6 @@ export default new Vuex.Store({
       if(state.myPokemons.length <3){
         state.partySlots = state.partySlots - 1
         state.myPokemons.push(pokemon)
-        // console.log('mutains 2: mypokemon',state.myPokemons)
       }else{
         state.partySlots = 0
        
@@ -68,14 +73,19 @@ export default new Vuex.Store({
           utilService.getRandomInt(state.minPokemons,state.maxPokemons).toString() + '/'
       });
     },
+    setTrainer(state,{newOpp}){
+      state.opponent = newOpp
+      console.log('setTrainer: ',state.opponent)
+    },
     setRandomMoves(state,{pokeIdAndMoves}){
-      state.myPokemonsMoves.forEach((id,index)=>{
-        if(state.myPokemonsMoves[index].pokeId === pokeIdAndMoves.id){
-          console.log(pokeIdAndMoves.id)
-          console.log(pokeIdAndMoves.moveLength)
-          state.myPokemonsMoves[index]= movesService.createPokeMoves(pokeIdAndMoves.id,pokeIdAndMoves.moveLength)
-        }
-      })
+      // state.myPokemonsMoves.forEach((id,index)=>{
+      //   if(state.myPokemonsMoves[index].pokeId === pokeIdAndMoves.id){
+      //     console.log(pokeIdAndMoves.id)
+      //     console.log(pokeIdAndMoves.moveLength)
+      //     state.myPokemonsMoves[index]= movesService.createPokeMoves(pokeIdAndMoves.id,pokeIdAndMoves.moveLength)
+      //   }
+      // })
+      console.log('Coming Soon')
     },
    
   },
@@ -85,13 +95,12 @@ export default new Vuex.Store({
       commit({type: 'setMyPokemons',pokemon})
 
     },
-    async setNewEnemyTrainer({state},{ level }){
+    async setNewOpponent({commit},{level}){
       try {
-        state.enemyTrainer = await trainerService.CreateTrainer(level)
+        const newOpp = await trainerService.CreateTrainer(level)
+        commit({type: 'setTrainer', newOpp})
       } catch (error) {
         console.log(error)
-      }finally{
-        console.log('new trainer enter: ',state.enemyTrainer)
       }
     },
   },
