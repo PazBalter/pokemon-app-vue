@@ -75,7 +75,7 @@ export default new Vuex.Store({
     },
     setTrainer(state,{newOpp}){
       state.opponent = newOpp
-      console.log('setTrainer: ',state.opponent)
+      console.log('setTrainer store: ',state.opponent)
     },
     setRandomMoves(state,{pokeIdAndMoves}){
       // state.myPokemonsMoves.forEach((id,index)=>{

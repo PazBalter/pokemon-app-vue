@@ -1,16 +1,23 @@
 <template>
     <section class="arena-section">
     <NavBar
-    :key="partyReload"
-    @togglePartySlots="togglePartySlots"
-    @spliceFromParty="spliceFromParty"
-    :imageUrl="imageUrl"
+        @togglePartySlots="togglePartySlots"
+        @spliceFromParty="spliceFromParty"
+        :imageUrl="imageUrl"
     />
-    <BattleArena
-    :imageUrl="imageUrl"
-    :apiUrl="apiUrl"
-    :pokeMovesUrl="pokeMovesUrl"
-    />
+    <div class="space-maker"></div>
+
+    <div v-if="gameIsOn" >
+        <BattleArena
+            :imageUrl="imageUrl"
+            :apiUrl="apiUrl"
+            :pokeMovesUrl="pokeMovesUrl"
+        />
+    </div>
+    <div v-else>
+        <GameInst @startGame="startGame"/>
+    </div>
+  
     
     </section>
 </template>
@@ -19,11 +26,14 @@
 
 import NavBar from '@/components/nav-bar.vue'
 import BattleArena from '@/components/battle-arena.vue'
+import GameInst from '@/components/game-inst.vue'
+
 export default {
     name: 'Arena', 
     components:{
         NavBar,
         BattleArena,
+        GameInst,
 
     },
     data(){
@@ -31,15 +41,14 @@ export default {
             partyReload:0,  
             imageUrl:'',
             apiUrl:'',
-            pokeMovesUrl:''
+            pokeMovesUrl:'',
+            gameIsOn: false,
         }
     },
     created(){
         this.apiUrl= this.getApiUrl()
         this.imageUrl = this.getImageUrl()
         this.pokeMovesUrl = this.getPokeMovesUrl()
-        this.partyCmpReload()
-        // console.log(this.pokeMovesUrl+'7/')
     },
     methods:{
         getApiUrl(){
@@ -50,9 +59,6 @@ export default {
         },
         getPokeMovesUrl(){
             return this.$store.getters.getPokeMovesUrl;
-        },
-        partyCmpReload(){
-            this.partyReload++;
         },
         togglePartySlots(slots){
             if(slots === 0 ){
@@ -65,6 +71,9 @@ export default {
             this.$store.commit({ type: "spliceIndexFromParty", index });
             this.partyCmpReload()
         },
+        startGame(){
+            this.gameIsOn = true
+        }
     },
 }
 </script>
@@ -72,6 +81,8 @@ export default {
 <style lang="scss" scoped>
 .arena-section{
     height: 100vh;
-
+    .space-maker{
+        padding-top: 120px ;
+    }
 }
 </style>

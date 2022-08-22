@@ -1,13 +1,12 @@
 <template>
     <section class="battle-arena">
-        <div class="space-maker"></div>
+      
       
         <div>
             <button @click="setNewTrainer"> LEVEL 1 ENEMY </button>
             <button @click="makeNewEnemy"> NEW ENEMY </button>
             <button @click="showStats"> SHOW STATS</button>
             <button @click="submitPokemons"> SUBMIT POKEMONS</button>
-            <button> {{opponentFrontPoke}}</button>
         </div>
         <div class="battle-container">
             <div class="enemy-pos">
@@ -113,8 +112,8 @@ export default {
         async setNewTrainer(){
             try {           
                 await this.setNewTrainerByLevel()
-                this.opponentFrontPoke = this.getOpponentFrontPoke()
-                  console.log('frontOpp: ',this.opponentFrontPoke)
+                // this.opponentFrontPoke = this.getOpponentFrontPoke()
+                //   console.log('frontOpp: ',this.opponentFrontPoke)
               
                 // this.opponent = this.$store.getters.getEnemyTrainer
                 // await this.fetchDataEnemy()
@@ -223,9 +222,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    .space-maker{
-        padding-top: 120px ;
-    }
+    
     .battle-container{
         width: 700px;
         height: 350px;
