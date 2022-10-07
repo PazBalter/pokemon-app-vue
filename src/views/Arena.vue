@@ -15,7 +15,9 @@
         />
     </div>
     <div v-else>
-        <GameInst @startGame="startGame"/>
+        <div  v-if="showGameInst" > <GameInst @toggleGame="toggleGame"/></div>
+        <div v-else><PulseLoader/></div>
+        
     </div>
   
     
@@ -27,10 +29,11 @@
 import NavBar from '@/components/nav-bar.vue'
 import BattleArena from '@/components/battle-arena.vue'
 import GameInst from '@/components/game-inst.vue'
-
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
     name: 'Arena', 
     components:{
+        PulseLoader,
         NavBar,
         BattleArena,
         GameInst,
@@ -42,13 +45,18 @@ export default {
             imageUrl:'',
             apiUrl:'',
             pokeMovesUrl:'',
-            gameIsOn: false,
+            showGameInst: true,
         }
     },
     created(){
         this.apiUrl= this.getApiUrl()
         this.imageUrl = this.getImageUrl()
         this.pokeMovesUrl = this.getPokeMovesUrl()
+    },
+    computed:{
+        gameIsOn(){
+            return this.$store.getters.getGameIsOn
+        }
     },
     methods:{
         getApiUrl(){
@@ -71,8 +79,20 @@ export default {
             this.$store.commit({ type: "spliceIndexFromParty", index });
             this.partyCmpReload()
         },
-        startGame(){
-            this.gameIsOn = true
+        async setNewTrainerByLevel(){
+            let level = 1
+            await this.$store.dispatch({ type: "setNewOpponent", level });
+            // return this.$store.getters.getEnemyTrainer;
+        },
+        async toggleGame(){
+           try {
+               this.showGameInst = false
+               await this.setNewTrainerByLevel()
+           } catch (error) {
+            console.log(error)
+           }
+     
+        //    this.$store.commit({type: "toggleGame"})
         }
     },
 }

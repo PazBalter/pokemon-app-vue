@@ -1,11 +1,5 @@
 <template>
   <div id="app">
-    <!-- <NavBar
-    :key="partyReload"
-    @togglePartySlots="togglePartySlots"
-    @spliceFromParty="spliceFromParty"
-    :imageUrl="imageUrl"
-    /> -->
     <router-view/>
   </div>
 </template>

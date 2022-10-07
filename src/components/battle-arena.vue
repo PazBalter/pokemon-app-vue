@@ -3,10 +3,10 @@
       
       
         <div>
-            <button @click="setNewTrainer"> LEVEL 1 ENEMY </button>
-            <button @click="makeNewEnemy"> NEW ENEMY </button>
-            <button @click="showStats"> SHOW STATS</button>
-            <button @click="submitPokemons"> SUBMIT POKEMONS</button>
+            <!-- <button @click="setNewTrainer"> LEVEL 1 ENEMY </button>
+            <button @click="makeNewEnemy"> NEW ENEMY </button> -->
+            <!-- <button @click="showStats"> SHOW STATS</button>
+            <button @click="submitPokemons"> SUBMIT POKEMONS</button> -->
         </div>
         <div class="battle-container">
             <div class="enemy-pos">
@@ -14,9 +14,8 @@
                     <PokeStats
                      :opponentFrontPoke="opponentFrontPoke" />
                 </div>
-                
                 <div  class="enemy-poke-img">
-                    <div  v-if="opponent.length">
+                    <div  >
                         <div v-if="opponentFrontPoke"  class="pipi">
                             <img v-if=" opponentFrontPoke.height > 20" :style="{bottom: 25+'px'}" :src="imageUrl + opponentFrontPoke.id+'.png'" alt="">
                             <img v-else :style="{bottom: 20 +'px'}" :src="imageUrl + opponentFrontPoke.id+'.png'" alt="">
@@ -64,8 +63,7 @@ import PokeStats from './poke-stats.vue'
 
 export default {
     components:{
-    PokeStats
-
+        PokeStats
     },
     props: [  
         'imageUrl',
@@ -76,9 +74,7 @@ export default {
         return{
             
             height:0,
-            // userPokemons:[],
             // enemyPokemon:[],
-            // enemyPokemonId:['3/','6/','9/'],
             currentUrl:'',
             opponentFrontPoke:{},
             // userFrontPoke:{},
@@ -92,13 +88,16 @@ export default {
         // this.enemyPokemonId = this.getEnemy()
         // this.currentUrl = this.apiUrl;
         // this.makeNewEnemy()
+        this.opponentFrontPoke = this.opponent.pokemons[0]
+        console.log(this.opponent.pokemons[0])
+        console.log(this.opponentFrontPoke.id)
     },
     computed:{
      opponent(){
         return this.$store.getters.getOpponent;
      },
     //  opponentFrontPoke(){
-    //     return this.$store.getters.getOpponentFront;
+    //     return this.$store.getters.getOpponentFrontPoke;
     //  },
      userFrontPoke(){
         return this.$store.getters.getUserFront;
@@ -121,7 +120,6 @@ export default {
                console.log(error) 
             }
             finally{
-              
                 // this.enemyPokemonId = this.opponent.pokemons.map( poke =>
                 //     poke.id
                 // )
@@ -161,13 +159,9 @@ export default {
         fetchDataEnemy(){  
             // try {
             //     this.opponent.pokemons.forEach(poke => {})
-              
-           
             // } catch (error) {
             //     console.log(error)
             // }
-
-
             // this.opponent = []
             // this.opponent.pokemons.forEach(poke => {
             // let req = new Request(this.currentUrl + poke.id);

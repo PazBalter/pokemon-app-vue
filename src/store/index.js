@@ -21,6 +21,7 @@ export default new Vuex.Store({
     partySlots:3,
     enemyPokemonsId:['3/','6/','9/'],
     opponent:[],
+    gameIsOn:false
   },
   getters: {
     getPokeImageUrl(state) {
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     },
     getMyPokemons(state) {
       return state.myPokemons;
+    },
+    getMyPokemonsLen(state) {
+      return state.myPokemons.length;
     },
     getPokeMovesUrl(state){
       return state.pokeMovesUrl;
@@ -44,17 +48,22 @@ export default new Vuex.Store({
     getOpponent(state){
       return state.opponent;
     },
-    getOpponentFront(state){
+    getOpponentFrontPoke(state){
+      console.log(state.opponent.pokemons[0])
       return state.opponent.pokemons[0]
     },
     getUserFront(state){
       return state.myPokemons[0]
     },
+    getGameIsOn(state){
+      console.log('getGameIsOn: ',state.gameIsOn)
+      return state.gameIsOn
+    }
 
   },
   mutations: {
     setMyPokemons(state,{pokemon}){
-      if(state.myPokemons.length <3){
+      if(state.myPokemons.length < 3){
         state.partySlots = state.partySlots - 1
         state.myPokemons.push(pokemon)
       }else{
@@ -76,6 +85,10 @@ export default new Vuex.Store({
     setTrainer(state,{newOpp}){
       state.opponent = newOpp
       console.log('setTrainer store: ',state.opponent)
+    },
+    toggleGame(state){
+      state.gameIsOn? state.gameIsOn = false : state.gameIsOn = true ;
+      console.log('toggleGame: ',state.gameIsOn)
     },
     setRandomMoves(state,{pokeIdAndMoves}){
       // state.myPokemonsMoves.forEach((id,index)=>{
@@ -101,6 +114,9 @@ export default new Vuex.Store({
         commit({type: 'setTrainer', newOpp})
       } catch (error) {
         console.log(error)
+      }finally{
+        console.log('finally: set opponent')
+        commit({type: 'toggleGame'})
       }
     },
   },

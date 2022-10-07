@@ -1,5 +1,5 @@
 <template>
-    <section class="status" v-if="(enemyFrontPoke || userFrontPoke)">
+    <section class="status" v-if="(opponentFrontPoke || userFrontPoke)">
         <div class="front-poke-name">{{pokemon.name}}
             <span v-if="pokeStatus">{{pokeStatus}}</span>
         </div>
@@ -19,7 +19,7 @@
 <script>
 export default {
     props:[  
-        'enemyFrontPoke',
+        'opponentFrontPoke',
         'userFrontPoke',
         ],
     data(){
@@ -38,8 +38,8 @@ export default {
     },
     methods:{
         pokeCheck(){
-            if(this.enemyFrontPoke){
-              this.pokemon = this.enemyFrontPoke  
+            if(this.opponentFrontPoke){
+              this.pokemon = this.opponentFrontPoke  
             }else if(this.userFrontPoke){
               this.pokemon = this.userFrontPoke  
             }else{

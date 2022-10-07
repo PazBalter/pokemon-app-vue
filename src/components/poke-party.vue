@@ -108,8 +108,6 @@ export default {
     };
   },
   created() {
-    // this.pokemons = this.getMyPokemons();
-    // this.pokemonsMoves = this.getMyPokemonsMoves();
     this.checkSlots();
   },
   computed: {

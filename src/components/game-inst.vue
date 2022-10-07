@@ -19,22 +19,13 @@
                         </div>
                         <div class="slot-poke-name">{{pokemon.name}}</div>
                     </div>
-                    <div class="team-slot"
-                    v-for="(pokemon, index) in pokemons" :key= index>
-                        <div class="slot-light"></div>
-                        <div class="slot-poke-pic">
-                            <img
-                                class="party-poke-img"
-                                :src="cardUrl + pokemon.id + '.png'"
-                                width="140"
-                                height="140"
-                                />
-                        </div>
-                        <div class="slot-poke-name">{{pokemon.name}}</div>
+                    <div class="party-slots" v-for="slot in slots" :key="slot">
+                        <img src="@/assets/questionmark.jpeg" height="140" width="140" />
+                        <div class="slot-poke-name">Empty</div>
                     </div>
                 </div>
             </div>
-            <button @click="startGame">lets go</button>
+            <button @click="toggleGame">lets go</button>
         </div>
     </section>
 </template>
@@ -43,20 +34,28 @@ export default {
     data() {
         return {
         cardUrl:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/",
-        slots: 3,
+        // slots: 3,
         };
     },
     computed: {
         pokemons() {
         return this.$store.getters.getMyPokemons;
         },
+        slots(){
+        return this.$store.getters.getSlots;
+    },
     },
     methods:{
-        startGame(){
-            if(pokemons.length >= 3){
-            this.$emit("startGame", true);
+        getPokemonsLength(){
+            return this.$store.getter.getMyPokemonsLen;
+        },
+        toggleGame(){
+            if(this.slots <= 0){
+            this.$emit("toggleGame");
             }else{
+                // console.log(this.getPokemonsLength)
                 console.log("Party must be full")
+                console.log("party slots:", this.slots)
             }
            
         }
@@ -76,15 +75,15 @@ export default {
        border: 4px  red;
        border-style: ridge;
     }
-    .team-slot{
-
+    .party-slots{
+        background-color: #ffffff;
+    }
+    .team-slot{   
         .slot-poke-name{
-        background: lavender;  
+            background-color: #ffffff; 
         }
         .slot-poke-pic{
-    
-            background: lavender;
-            
+            background-color: #ffffff;              
         }
     }
 }
