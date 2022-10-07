@@ -39,12 +39,17 @@ export default {
     methods:{
         pokeCheck(){
             if(this.opponentFrontPoke){
-              this.pokemon = this.opponentFrontPoke  
+              this.pokemon = this.opponentFrontPoke 
+              this.calcHp() 
             }else if(this.userFrontPoke){
-              this.pokemon = this.userFrontPoke  
+              this.pokemon = this.userFrontPoke
+              this.calcHp()   
             }else{
                 return null
             }
+        },
+        calcHp(){
+           console.log(pokemon) 
         },
         setwidth(){
         var width = this.pokeMaxHP
