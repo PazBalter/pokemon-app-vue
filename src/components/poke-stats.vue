@@ -6,13 +6,10 @@
         <div class="hp-bar-container">
             <div class="hp-wrapper">
                 <div class="hp-tubo">
-                <span :style="{width:setwidth() +'%',background:setBarColor()}"> </span>
+                <span :style="{width:setWidth() +'%',background:setBarColor()}"> </span>
             </div>
             </div>
         </div>
-        <!-- <button @click="changeMoreHP">cahnge</button>
-        <button @click="changeLessHP">cahnge</button>
-        <button @click="changeLesserHP">cahnge</button> -->
     </section>
 </template>
 
@@ -33,40 +30,32 @@ export default {
     created(){
         this.pokeCheck()
     },
-    mounted(){
-        
+    watch:{
+       pokeMaxHP(value){
+           this.setWidth(value)
+        },  
     },
     methods:{
         pokeCheck(){
             if(this.opponentFrontPoke){
               this.pokemon = this.opponentFrontPoke 
-              this.calcHp() 
+              this.calcHpByPercent(this.pokemon.stats[0]) 
             }else if(this.userFrontPoke){
               this.pokemon = this.userFrontPoke
-              this.calcHp()   
+              this.calcHpByPercent( this.pokemon.stats[0])   
             }else{
                 return null
             }
         },
-        calcHp(){
-           console.log(pokemon) 
+        calcHpByPercent({max,points}){
+            let hp
+            hp = Math.round(points*100/max)
+            hp <= 0 ? hp = 0 : hp = hp
+            this.pokeMaxHP = hp
         },
-        setwidth(){
-        var width = this.pokeMaxHP
-        return width
+        setWidth(){
+            return this.pokeMaxHP
         },  
-        changeLessHP(){
-            this.pokeMaxHP = 19
-            this.setwidth()
-        }, 
-        changeLesserHP(){
-            this.pokeMaxHP = 0
-            this.setwidth()
-        }, 
-        changeMoreHP(){
-            this.pokeMaxHP = 55
-            this.setwidth()
-        },
         setBarColor(){
             if (this.pokeMaxHP > 55) {
                 return '#00cc71';

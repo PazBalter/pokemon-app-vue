@@ -33,15 +33,15 @@
                     
                      <div  v-if="userPokemons.length" class="user-imgs-centered"> 
                         <div  v-if=" userPokemons[0].height > 5">
-                            <img  v-if=" userPokemons[0].height < 30"
+                            <img  v-if=" userPokemons[0].height < 20"
                                 :style="{top: userPokemons[0].height+'px'}" 
                                 :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${userPokemons[0].id}.png`">
                             <img  v-else 
-                                :style="{top: 30+'px'}" 
+                                :style="{top: 20+'px'}" 
                                 :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/${userPokemons[0].id}.png`">
                         </div>
                         <img  v-else
-                        :style="{top: 35+'px'}" 
+                        :style="{top: 25+'px'}" 
                         :src="userPokemons[0].sprites.back_default">
                     </div>
                 </div>
@@ -52,18 +52,20 @@
                 
                
             </div>
+           
         </div>
-        
+        <moveTable/>
     </section>
 </template>
 
 <script>
 
 import PokeStats from './poke-stats.vue'
-
+import moveTable from './move-table.vue'
 export default {
     components:{
-        PokeStats
+        PokeStats,
+        moveTable
     },
     props: [  
         'imageUrl',
@@ -219,7 +221,7 @@ export default {
     
     .battle-container{
         width: 700px;
-        height: 350px;
+        height: 300px;
         background-image: url(@/assets/arena-backgorund.jpeg);
         
         display: flex;
