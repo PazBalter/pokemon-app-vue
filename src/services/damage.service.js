@@ -134,6 +134,7 @@ function isCriticalHit(){
   }else{
     return 1
   }
+  // return (num >=93) ?  2 :  1;
 }
 async function damageRelations(moveType , defenderType) {
   try {

@@ -49,23 +49,20 @@
                     <PokeStats
                     :userFrontPoke="userFrontPoke"/>
                 </div>
-                
-               
             </div>
-           
         </div>
-        <moveTable/>
+        <ControlTable />
     </section>
 </template>
 
 <script>
 
 import PokeStats from './poke-stats.vue'
-import moveTable from './move-table.vue'
+import ControlTable from './control-table.vue'
 export default {
     components:{
         PokeStats,
-        moveTable
+        ControlTable
     },
     props: [  
         'imageUrl',

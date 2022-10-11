@@ -12,10 +12,10 @@ const POKE_MOVE_URL = "https://pokeapi.co/api/v2/move/";
 async function createPokeMoves(allPokeMoves){
   try {
     const pokeMoves =  [
-      {moveName: '', type:""},
-      {moveName: '', type:""},
-      {moveName: '', type:""},
-      {moveName: '', type:""}
+      {moveName: "", type: "", power: null, accuracy: null},
+      {moveName: "", type: "", power: null, accuracy: null},
+      {moveName: "", type: "", power: null, accuracy: null},
+      {moveName: "", type: "", power: null, accuracy: null}
     ]
     const movesLen = allPokeMoves.length
   if(movesLen < 4){
@@ -27,18 +27,19 @@ async function createPokeMoves(allPokeMoves){
       pokeMoves.forEach((move,index) => {
         move.moveName = allPokeMoves[arrId[index]].move.name
     })
-    const [type1,type2,type3,type4] =
+    const [moveProps1,moveProps2,moveProps3,moveProps4] =
     await Promise.all([
-      getMoveTypeByName(pokeMoves[0].moveName),
-      getMoveTypeByName(pokeMoves[1].moveName),
-      getMoveTypeByName(pokeMoves[2].moveName),
-      getMoveTypeByName(pokeMoves[3].moveName)])
+      getMovePropertiesByName(pokeMoves[0].moveName),
+      getMovePropertiesByName(pokeMoves[1].moveName),
+      getMovePropertiesByName(pokeMoves[2].moveName),
+      getMovePropertiesByName(pokeMoves[3].moveName)])
 
-      pokeMoves[0].type = type1 
-      pokeMoves[1].type = type2
-      pokeMoves[2].type = type3
-      pokeMoves[3].type = type4
+      pokeMoves[0] = moveProps1 
+      pokeMoves[1] = moveProps2
+      pokeMoves[2] = moveProps3
+      pokeMoves[3] = moveProps4
 
+      console.log('pokeMoves[0]: ',pokeMoves[0])
       return pokeMoves
   }
   } catch (error) {
@@ -47,11 +48,18 @@ async function createPokeMoves(allPokeMoves){
   }
   
 }
-async function getMoveTypeByName(moveName){
+async function getMovePropertiesByName(move){
   try {
-    let result = await fetch(POKE_MOVE_URL + moveName);
+    let result = await fetch(POKE_MOVE_URL + move);
     let data = await result.json();
-    return data.type.name
+    let moveProps = {
+      moveName: move ,
+      type: data.type.name,
+      power: data.power,
+      accuracy: data.accuracy
+    }
+    // console.log('moveProps: ',moveProps)
+    return moveProps
   } catch (error) {
     console.log(error)
   }
