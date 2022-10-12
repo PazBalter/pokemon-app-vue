@@ -2,22 +2,25 @@
 <template>
   <section class="move-table">
         <div class="instructions-layer">
-           
+            
             <span class="inst-content">instructions</span>
             <PartyBag
-                v-if="toggles.partyBag"/>
+                @menuSwitch="menuSwitch"
+                v-if="switches[1].val"/>
         </div>
         <div class="user-options">
-            <div @click="menuSwitch({num:1 , val: true})"
-                class="move-table-btn">Fight</div>
-            <div @click="menuSwitch({num:2 , val: true})"
-                class="move-table-btn">Pokemons</div>
+            <div @click="menuSwitch(true,0)"
+                class="move-table-btn">Fight
+            </div>
+            <div @click="menuSwitch(true,1)"
+                class="move-table-btn">Pokemons
+            </div>
             <div class="move-table-btn">Tutorial</div>
             <div class="move-table-btn">Quit</div>
         </div>
     <FightTable 
-        
-        v-if="toggles.fightTable"/>
+        @menuSwitch="menuSwitch"
+        v-if="switches[0].val"/>
        
   </section>
 </template>
@@ -33,17 +36,17 @@ export default {
     },
     data(){
         return {
-            toggles:{
-                fightTable:false,
-                partyBag:false,
-            },
+            switches:[
+                {name:'fightTable' , val: false},
+                {name:'partyBag' , val: false}
+            ],
          
             pokemon:null,
         }
     },
     watch:{
         pokemon(){
-
+            
         }
     },
     computed:{
@@ -52,26 +55,19 @@ export default {
         },
     },
     methods:{
-        menuSwitch(toggle){
-            console.log(toggle.num)
-          switch (toggle.num) {
-            case value:1
-                this.toggles.FightTable = toggle.val
-                break;
-            case value:2
-                this.toggles.FightTable = toggle.val
-                break;
-            case value:3
-                this.toggles.FightTable = toggle.val
-                break;
-            case value:4
-                this.toggles.FightTable = toggle.val
-                break;
-          
-            default:
-                break;
-          }
-        },
+        menuSwitch(value,i){
+            this.switches.forEach((toggle,index) => {
+                if(index === i){
+                    console.log(value)
+                    toggle.val = value
+                }else{
+                    toggle.val = false 
+                }
+
+            })
+            console.log('this.switches: ',this.switches)
+        }
+    },
         // partyBagToggle(){
         //     if(this.partyBagIsOn){
         //         this.partyBagIsOn = false;  
@@ -79,7 +75,7 @@ export default {
         //         this.partyBagIsOn = true;
         //     }
         // }
-    }
+        // }
 
 }
 </script>
@@ -93,10 +89,13 @@ export default {
     display: flex;
    
     .instructions-layer{
-        padding-left:20px;
+        
         width: 100%;
         display: flex;
         align-items:center;
+        span{
+            padding-left:20px;
+        }
 
         .inst-content{
             text-align: left;

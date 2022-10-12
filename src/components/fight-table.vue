@@ -45,7 +45,7 @@ export default {
             this.moveType = move.type;
         },
         goToControlTable(){
-            this.$emit("fightTableToggle");
+            this.$emit("menuSwitch",false,0);
         }
     }
 }
@@ -59,7 +59,7 @@ export default {
         border-radius: 0px 0px 4px 4px;
         border: solid 5px #2c3e50;
         position: absolute;
-        width: 445px;
+        width: 700px;
         height: 120px;
         background-color: #efefef;
         box-shadow: 0 15px 30px rgba(0,0,0,.2),

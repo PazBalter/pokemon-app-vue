@@ -76,6 +76,15 @@ export default new Vuex.Store({
       state.partySlots = state.partySlots + 1
      
     },
+    switchPokeIdx(state,{index}){
+     
+      const pokemon = state.myPokemons[index]
+      console.log(pokemon)
+      state.myPokemons.splice(index,1)
+      console.log('before: ',state.myPokemons)
+      state.myPokemons.splice(0,0,pokemon)
+      console.log('after: ',state.myPokemons)
+    },
     makeNewEnemy(state){
       state.enemyPokemonsId.forEach((id,index) =>{
         state.enemyPokemonsId[index] =
@@ -117,6 +126,16 @@ export default new Vuex.Store({
       }finally{
         console.log('finally: set opponent')
         commit({type: 'toggleGame'})
+      }
+    },
+    async switchToFrontPoke({commit},{index}){
+      try {
+        
+        commit({type: 'switchPokeIdx', index})
+      } catch (error) {
+        console.log(error)
+      }finally{
+        console.log()
       }
     },
   },
