@@ -2,12 +2,12 @@
   <section class="fight-table">
         <div class="moves-titles">
            <ul>
-                <li @mouseover="moveInfo(moves[0])">{{moves[0].moveName}}</li>
-                <li @mouseover="moveInfo(moves[1])">{{moves[1].moveName}}</li>
+                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[0])">{{moves[0].moveName}}</li>
+                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[1])">{{moves[1].moveName}}</li>
             </ul> 
             <ul>
-                <li @mouseover="moveInfo(moves[2])">{{moves[2].moveName}}</li>
-                <li @mouseover="moveInfo(moves[3])">{{moves[3].moveName}}</li>
+                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[2])">{{moves[2].moveName}}</li>
+                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[3])">{{moves[3].moveName}}</li>
             </ul> 
         </div>
         <div class="move-props">
@@ -46,7 +46,15 @@ export default {
         },
         goToControlTable(){
             this.$emit("menuSwitch",false,0);
-        }
+        },
+        async clickMove(move){
+            try {
+                this.$store.dispatch({ type: "battleTurn", move})
+            } catch (error) {
+                
+            }
+           
+        },
     }
 }
 </script>

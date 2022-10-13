@@ -7,6 +7,7 @@ import {statsService} from '@/services/stats.service'
 import {trainerService} from '@/services/trainer.service.'
 import {pokeService} from '@/services/pokemon.service'
 import {damageService} from '@/services/damage.service'
+import {arenaService} from '@/services/arena.service'
 
 Vue.use(Vuex)
 
@@ -49,7 +50,6 @@ export default new Vuex.Store({
       return state.opponent;
     },
     getOpponentFrontPoke(state){
-      console.log(state.opponent.pokemons[0])
       return state.opponent.pokemons[0]
     },
     getUserFront(state){
@@ -130,12 +130,30 @@ export default new Vuex.Store({
     },
     async switchToFrontPoke({commit},{index}){
       try {
-        
         commit({type: 'switchPokeIdx', index})
       } catch (error) {
         console.log(error)
       }finally{
         console.log()
+      }
+    },
+    async battleTurn({commit,state},{move}){
+      try {
+        let userPoke = state.myPokemons[0]
+        let botPoke = state.opponent.pokemons[0]
+
+        if(arenaService.isUserIsFaster(userPoke,botPoke)){
+          botPoke = await arenaService.userTurn(move,userPoke,botPoke)
+        }else{
+
+        }
+        state.opponent.pokemons[0].stats[0].points = botPoke.stats[0].points
+        console.log(state.opponent)
+          
+
+        
+      } catch (error) {
+        
       }
     },
   },

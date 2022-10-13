@@ -85,23 +85,28 @@ const vulpix = {
     ]
 }
 var move = 55
-calcDamage(move,lombre, vulpix )
+// calcDamage(move,lombre, vulpix )
 async function calcDamage(move, attacker, defender) {
   try {
-    const pokeMove = await movesService.getApiMoveById(move)
+    const pokeMove = await movesService.getApiMoveById(move.moveName)
+    console.log('pokeMove: ' ,pokeMove)
+    console.log('pokeMove.accuracy: ',pokeMove.accuracy)
+    console.log('utilService.getRandomInt(0, 100): ',utilService.getRandomInt(0, 100))
     if (pokeMove.accuracy >= utilService.getRandomInt(0, 100)) {
       const [atk,def] = checkDmgClass(pokeMove,attacker.stats, defender.stats)
+      console.log('[atk,def] :',[atk,def])
       const power = pokeMove.power;
+      console.log('power :',power)
       const critical = isCriticalHit();
-     
+      console.log('critical :',critical)
       const dmgRel = await damageRelations(pokeMove.type.name, defender.types);
-     
+      console.log('dmgRel :',dmgRel)
       const FF = isPokeTypeSameTo(pokeMove.type.name, attacker.types);
-
+      console.log('FF :',FF)
       const damage = Math.round((((((2 * LEVEL) / 5 + 2) * power * atk) / def / 50) * FF + 2) *critical *dmgRel);
       
       console.log('damage sum: ',damage);
-      // return damage
+      return damage
     }else{
       console.log('missed attack! damage: ', 0);
     } 

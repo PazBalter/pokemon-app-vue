@@ -3,7 +3,7 @@
   <section class="move-table">
         <div class="instructions-layer">
             
-            <span class="inst-content">instructions</span>
+            <span class="inst-content">{{instructions}}</span>
             <PartyBag
                 @menuSwitch="menuSwitch"
                 v-if="switches[1].val"/>
@@ -40,6 +40,7 @@ export default {
                 {name:'fightTable' , val: false},
                 {name:'partyBag' , val: false}
             ],
+            instructions:'',
          
             pokemon:null,
         }
@@ -68,14 +69,7 @@ export default {
             console.log('this.switches: ',this.switches)
         }
     },
-        // partyBagToggle(){
-        //     if(this.partyBagIsOn){
-        //         this.partyBagIsOn = false;  
-        //     }else{
-        //         this.partyBagIsOn = true;
-        //     }
-        // }
-        // }
+        
 
 }
 </script>
