@@ -12,15 +12,22 @@ const POKE_MOVE_URL = "https://pokeapi.co/api/v2/move/";
 async function createPokeMoves(allPokeMoves){
   try {
     const pokeMoves =  [
-      {moveName: "", type: "", power: null, accuracy: null},
-      {moveName: "", type: "", power: null, accuracy: null},
-      {moveName: "", type: "", power: null, accuracy: null},
-      {moveName: "", type: "", power: null, accuracy: null}
+      {moveName: "", type: "",id: null, power: null, accuracy: null},
+      {moveName: "", type: "",id: null, power: null, accuracy: null},
+      {moveName: "", type: "",id: null, power: null, accuracy: null},
+      {moveName: "", type: "",id: null, power: null, accuracy: null}
     ]
     const movesLen = allPokeMoves.length
   if(movesLen < 4){
     pokeMoves[0].moveName = allPokeMoves[0].move.name
     pokeMoves[0].type = "normal"
+    pokeMoves.forEach((move)=>{
+      move.moveName = "headbutt" ,
+      move.id =  29,
+      move.type = "normal",
+      move.power = 70,
+      move.accuracy = 100
+    });
     return pokeMoves 
   }else{
     const powerArrMoves = await getPowerArrMoves(allPokeMoves)

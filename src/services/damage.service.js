@@ -69,6 +69,7 @@ function isCriticalHit(){
 async function damageRelations(moveType , defenderType) {
   try {
       const pokeMove = await getApiTypeByName(moveType) 
+     
       return calcTypeRatio(pokeMove,defenderType);
   } catch (error) {
     console.log(error)

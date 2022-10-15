@@ -8,6 +8,7 @@ import {trainerService} from '@/services/trainer.service.'
 import {pokeService} from '@/services/pokemon.service'
 import {damageService} from '@/services/damage.service'
 import {arenaService} from '@/services/arena.service'
+// import { types } from 'sass'
 
 Vue.use(Vuex)
 
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     partySlots:3,
     enemyPokemonsId:['3/','6/','9/'],
     opponent:[],
-    gameIsOn:false
+    gameIsOn:false,
+    battleRound:0
   },
   getters: {
     getPokeImageUrl(state) {
@@ -107,6 +109,28 @@ export default new Vuex.Store({
       // })
       console.log('Coming Soon')
     },
+    botSwitchPoke(state,{userPoke}){
+      
+   
+      // console.log( state.opponent.pokmons.some((poke) => poke.stats[0].points > 0))
+      if( true){
+        const arrOfChoices =[]
+        state.opponent.pokemons.forEach((poke,index) =>{
+         if(poke.stats[0].points > 0){
+           console.log("poke.index: ",index)
+           arrOfChoices.push(index)
+         }
+         // let choice = arenaService.botBestSwitch(userPoke.types,poke)
+       });
+       console.log('arrOfChoices: ',arrOfChoices)
+       const pokemon = state.opponent.pokemons[arrOfChoices[0]]
+       state.opponent.pokemons.splice(arrOfChoices[0],1)
+       state.opponent.pokemons.splice(0,0,pokemon)
+      }else{
+        console.log('You Win')
+      }
+    
+    }
    
   },
   actions: {
@@ -137,22 +161,41 @@ export default new Vuex.Store({
     },
     async battleTurn({commit,state},{move}){
       try {
+        state.battleRound++
         let userPoke = state.myPokemons[0]
         let botPoke = state.opponent.pokemons[0]
 
         if(arenaService.isUserIsFaster(userPoke,botPoke)){
-          userPoke = await arenaService.botTurn(userPoke,botPoke)
           botPoke = await arenaService.userTurn(move,userPoke,botPoke)
+          if(botPoke.stats[0].points === 0){
+            console.log('botSwitchPoke')
+            commit({type: 'botSwitchPoke',userPoke})
+          }else{
+            userPoke = await arenaService.botTurn(userPoke,botPoke)
+            if(userPoke.stats[0].points === 0){
+              console.log('user have to switch')
+            }
+          }
+          
         }else{
-          botPoke = await arenaService.userTurn(move,userPoke,botPoke)
+          userPoke = await arenaService.botTurn(userPoke,botPoke)
+          if(userPoke.stats[0].points === 0){
+            console.log('user have to switch')
+          }else{
+            botPoke = await arenaService.userTurn(move,userPoke,botPoke)
+            if(botPoke.stats[0].points === 0){
+              console.log('botSwitchPoke')
+              commit({type: 'botSwitchPoke',userPoke})
+            }
+          }
+         
         }
-        state.opponent.pokemons[0].stats[0].points = botPoke.stats[0].points
-        console.log('nattleTurn: ',state.opponent)
+        console.log('finish func battle Round: ',state.battleRound)
           
 
         
       } catch (error) {
-        
+        console.log(error)
       }
     },
   },

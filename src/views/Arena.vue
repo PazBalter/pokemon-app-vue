@@ -80,7 +80,7 @@ export default {
             this.partyCmpReload()
         },
         async setNewTrainerByLevel(){
-            let level = 4
+            let level = 3
             await this.$store.dispatch({ type: "setNewOpponent", level });
             // return this.$store.getters.getEnemyTrainer;
         },
