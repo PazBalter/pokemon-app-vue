@@ -23,23 +23,32 @@ async function createPokeMoves(allPokeMoves){
     pokeMoves[0].type = "normal"
     return pokeMoves 
   }else{
-    const arrId = utilService.GenrateArrUniqeNum(movesLen);
-      pokeMoves.forEach((move,index) => {
-        move.moveName = allPokeMoves[arrId[index]].move.name
-    })
-    const [moveProps1,moveProps2,moveProps3,moveProps4] =
-    await Promise.all([
-      getMovePropertiesByName(pokeMoves[0].moveName),
-      getMovePropertiesByName(pokeMoves[1].moveName),
-      getMovePropertiesByName(pokeMoves[2].moveName),
-      getMovePropertiesByName(pokeMoves[3].moveName)])
+    const powerArrMoves = await getPowerArrMoves(allPokeMoves)
+    
+    const arrId = utilService.GenrateArrUniqeNum(powerArrMoves.length);
+    // pokeMoves.forEach((move,index) => {
+    //   move.moveName = powerArrMoves[arrId[index]].move.name
+    // })
+    // const [moveProps1,moveProps2,moveProps3,moveProps4] =
+    // await Promise.all([
+    //   generateMoveObj(powerArrMoves[arrId[index]]),
+    //   generateMoveObj(powerArrMoves[arrId[index]]),
+    //   generateMoveObj(powerArrMoves[arrId[index]]),
+    //   generateMoveObj(powerArrMoves[arrId[index]])])
+    // const [moveProps1,moveProps2,moveProps3,moveProps4] =
+    // await Promise.all([
+    //   getMovePropertiesByName(pokeMoves[0].moveName),
+    //   getMovePropertiesByName(pokeMoves[1].moveName),
+    //   getMovePropertiesByName(pokeMoves[2].moveName),
+    //   getMovePropertiesByName(pokeMoves[3].moveName)])
 
-      pokeMoves[0] = moveProps1 
-      pokeMoves[1] = moveProps2
-      pokeMoves[2] = moveProps3
-      pokeMoves[3] = moveProps4
+      pokeMoves[0] = generateMoveObj(powerArrMoves[arrId[0]])
+      pokeMoves[1] = generateMoveObj(powerArrMoves[arrId[1]])
+      pokeMoves[2] = generateMoveObj(powerArrMoves[arrId[2]])
+      pokeMoves[3] = generateMoveObj(powerArrMoves[arrId[3]])
 
-      console.log('pokeMoves[0]: ',pokeMoves[0])
+
+      console.log('pokeMoves[0]: ',pokeMoves)
       return pokeMoves
   }
   } catch (error) {
@@ -48,22 +57,34 @@ async function createPokeMoves(allPokeMoves){
   }
   
 }
-async function getMovePropertiesByName(move){
-  try {
-    let result = await fetch(POKE_MOVE_URL + move);
-    let data = await result.json();
+function generateMoveObj(move){
+
     let moveProps = {
-      moveName: move ,
-      type: data.type.name,
-      power: data.power,
-      accuracy: data.accuracy
+      moveName: move.name ,
+      id: move.id,
+      type: move.type.name,
+      power: move.power,
+      accuracy: move.accuracy
     }
-    // console.log('moveProps: ',moveProps)
     return moveProps
-  } catch (error) {
-    console.log(error)
-  }
+    // console.log('moveProps: ',moveProps)
 }
+// async function getMovePropertiesByName(move){
+//   try {
+//     let result = await fetch(POKE_MOVE_URL + move);
+//     let data = await result.json();
+//     let moveProps = {
+//       moveName: move ,
+//       type: data.type.name,
+//       power: data.power,
+//       accuracy: data.accuracy
+//     }
+//     // console.log('moveProps: ',moveProps)
+//     return moveProps
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 async function getApiMoveById(id){
   try {
@@ -92,3 +113,25 @@ async function fetchData(id) {
     });
 }
 
+async function getPowerArrMoves(allPokeMoves){
+  try {
+    let arr = await Promise.all( allPokeMoves.map(async (move)=>{
+      try {
+        let result = await fetch(move.move.url);
+        let data = await result.json();
+        return data
+      } catch (error) {
+        console.log(error)
+      }
+      
+    }));
+    
+    const powerArrMoves = arr.filter(move =>{
+      return move.power > 5
+    });
+    console.log(powerArrMoves)
+    return powerArrMoves
+  } catch (error) {
+    console.log(error)
+  }  
+}

@@ -3,11 +3,11 @@
         <div class="moves-titles">
            <ul>
                 <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[0])">{{moves[0].moveName}}</li>
-                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[1])">{{moves[1].moveName}}</li>
+                <li @click="clickMove(moves[1])" @mouseover="moveInfo(moves[1])">{{moves[1].moveName}}</li>
             </ul> 
             <ul>
-                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[2])">{{moves[2].moveName}}</li>
-                <li @click="clickMove(moves[0])" @mouseover="moveInfo(moves[3])">{{moves[3].moveName}}</li>
+                <li @click="clickMove(moves[2])" @mouseover="moveInfo(moves[2])">{{moves[2].moveName}}</li>
+                <li @click="clickMove(moves[3])" @mouseover="moveInfo(moves[3])">{{moves[3].moveName}}</li>
             </ul> 
         </div>
         <div class="move-props">

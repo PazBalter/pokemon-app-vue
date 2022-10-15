@@ -79,11 +79,9 @@ export default new Vuex.Store({
     switchPokeIdx(state,{index}){
      
       const pokemon = state.myPokemons[index]
-      console.log(pokemon)
       state.myPokemons.splice(index,1)
-      console.log('before: ',state.myPokemons)
       state.myPokemons.splice(0,0,pokemon)
-      console.log('after: ',state.myPokemons)
+    
     },
     makeNewEnemy(state){
       state.enemyPokemonsId.forEach((id,index) =>{
@@ -143,12 +141,13 @@ export default new Vuex.Store({
         let botPoke = state.opponent.pokemons[0]
 
         if(arenaService.isUserIsFaster(userPoke,botPoke)){
+          userPoke = await arenaService.botTurn(userPoke,botPoke)
           botPoke = await arenaService.userTurn(move,userPoke,botPoke)
         }else{
-
+          botPoke = await arenaService.userTurn(move,userPoke,botPoke)
         }
         state.opponent.pokemons[0].stats[0].points = botPoke.stats[0].points
-        console.log(state.opponent)
+        console.log('nattleTurn: ',state.opponent)
           
 
         

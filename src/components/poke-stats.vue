@@ -1,68 +1,90 @@
 <template>
-    <section class="status" v-if="(opponentFrontPoke || userFrontPoke)">
+    <section class="status" v-if="pokemon">
         <div class="front-poke-name">{{pokemon.name}}
             <span v-if="pokeStatus">{{pokeStatus}}</span>
         </div>
         <div class="hp-bar-container">
             <div class="hp-wrapper">
                 <div class="hp-tubo">
-                <span :style="{width:setWidth() +'%',background:setBarColor()}"> </span>
+                <span :style="{width:calcHpByPercent(this.pokemon.stats[0])  +'%',background:setBarColor()}"> </span>
             </div>
             </div>
         </div>
+        <!-- <button @click="pokeCheck()">pokeCheck</button> -->
     </section>
 </template>
 
 <script>
 export default {
     props:[  
-        'opponentFrontPoke',
-        'userFrontPoke',
+        'pokemon',
         ],
     data(){
        
         return{
-            pokemon:{},
-            pokeMaxHP: 100,
+            // pokemon:{
+
+            // },
+            pokeHP: 100,
             pokeStatus:null ,
         }
     },
+   
     created(){
-        this.pokeCheck()
+        console.log(this.pokemon)
+        // console.log('1',this.opponentFrontPoke)
+        // console.log('2',this.userFrontPoke)
+        // this.pokeCheck()
+
     },
     watch:{
-       pokeMaxHP(value){
-           this.setWidth(value)
-        },  
+        pokemon(newVal,oldVal){
+            console.log('newVal: ',newVal)
+            console.log('oldVal: ',oldVal)
+            this.pokeHP = newVal.stats[0].points
+            this.pokeCheck()
+        },
+        opponentFrontPoke(newVal,oldVal){
+           console.log(newVal,oldVal)
+            // this.id = newExrDay.id
+            // this.weight = newExrDay.weight
+            // this.auto_weight = Boolean(newExrDay.auto_weight)
+            // this.auto_reps = Boolean(newExrDay.auto_reps)
+            // this.day_id = newExrDay.day_id
+            // this.exercise_id = newExrDay.exercise_id.toString()
+            // this.increment = newExrDay.increment
+            // console.log('watcher opponentFrontPoke: ', opponentFrontPoke) 
+        }
     },
     methods:{
+        consoleLog(){
+            console.log('1',this.pokemon)
+            console.log('2',this.pokemon)
+        },
         pokeCheck(){
-            if(this.opponentFrontPoke){
-              this.pokemon = this.opponentFrontPoke 
+            if(this.pokemon){
               this.calcHpByPercent(this.pokemon.stats[0]) 
-            }else if(this.userFrontPoke){
-              this.pokemon = this.userFrontPoke
-              this.calcHpByPercent( this.pokemon.stats[0])   
+              this.setWidth()
             }else{
                 return null
             }
         },
-        calcHpByPercent({max,points}){
-            let hp
-            hp = Math.round(points*100/max)
+        calcHpByPercent(statHp){
+            let hp = Math.round(statHp.points*100/statHp.max)
             hp <= 0 ? hp = 0 : hp = hp
-            this.pokeMaxHP = hp
+            this.pokeHP = hp
+            return this.pokeHP
         },
         setWidth(){
-            return this.pokeMaxHP
+            return this.pokeHP
         },  
         setBarColor(){
-            if (this.pokeMaxHP > 55) {
+            if (this.pokeHP > 55) {
                 return '#00cc71';
-            }else if(this.pokeMaxHP >=20){
+            }else if(this.pokeHP >=20){
                 return '#ffb33e'
             }
-            else if(this.pokeMaxHP >=8){
+            else if(this.pokeHP >=8){
                 return '#FB5959';
             }
             else{

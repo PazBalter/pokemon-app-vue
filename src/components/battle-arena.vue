@@ -12,7 +12,7 @@
             <div class="enemy-pos">
                 <div class="enemy-status">
                     <PokeStats
-                     :opponentFrontPoke="opponentFrontPoke" />
+                     :pokemon="opponentFrontPoke" />
                 </div>
                 <div  class="enemy-poke-img">
                     <div  >
@@ -47,7 +47,7 @@
                 </div>
                 <div class="user-status">
                     <PokeStats
-                    :userFrontPoke="userFrontPoke"/>
+                    :pokemon="userFrontPoke"/>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@ export default {
             height:0,
             // enemyPokemon:[],
             currentUrl:'',
-            opponentFrontPoke:{},
+            // opponentFrontPoke:{},
             // userFrontPoke:{},
             // userFront:0,
             // enemyFront:0,
@@ -87,17 +87,17 @@ export default {
         // this.enemyPokemonId = this.getEnemy()
         // this.currentUrl = this.apiUrl;
         // this.makeNewEnemy()
-        this.opponentFrontPoke = this.opponent.pokemons[0]
-        console.log(this.opponent.pokemons[0])
-        console.log(this.opponentFrontPoke.id)
+        // this.opponentFrontPoke = this.opponent.pokemons[0]
+        // console.log(this.opponent.pokemons[0])
+        // console.log(this.opponentFrontPoke.id)
     },
     computed:{
      opponent(){
         return this.$store.getters.getOpponent;
      },
-    //  opponentFrontPoke(){
-    //     return this.$store.getters.getOpponentFrontPoke;
-    //  },
+     opponentFrontPoke(){
+        return this.$store.getters.getOpponentFrontPoke;
+     },
      userFrontPoke(){
         return this.$store.getters.getUserFront;
      },

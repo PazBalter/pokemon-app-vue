@@ -6,114 +6,39 @@ const POKE_TYPES_URL = 'https://pokeapi.co/api/v2/type/';
 
 export const damageService = {
   calcDamage,
+  damageRelations
+
 };
 
-const LEVEL = 100;
-const lombre = {
-  id: 271,
-  moves:{
-    "pokeId": 271,
-    "moves": [55,35,7,2]
-  }, 
-  name:"lombre",
-  stats:[
-    {
-        "statName": "hp",
-        "points": 260
-    },
-    {
-        "statName": "attack",
-        "points": 131
-    },
-    {
-        "statName": "defense",
-        "points": 131
-    },
-    {
-        "statName": "specialAttack",
-        "points": 155
-    },
-    {
-        "statName": "specialDefense",
-        "points": 179
-    },
-    {
-        "statName": "speed",
-        "points": 131
-    }
-  ],
-  types:[
-    "grass",
-    "water"
-  ]
-}
-const vulpix = {
-    "id": 37,
-    "name": "vulpix",
-    "stats": [
-        {
-            "statName": "hp",
-            "points": 237
-        },
-        {
-            "statName": "attack",
-            "points": 215
-        },
-        {
-            "statName": "defense",
-            "points": 108
-        },
-        {
-            "statName": "specialAttack",
-            "points": 215
-        },
-        {
-            "statName": "specialDefense",
-            "points": 108
-        },
-        {
-            "statName": "speed",
-            "points": 96
-        }
-    ],
-    "moves": {
-      "pokeId": 37,
-      "moves": [71,79,21,67]
-      },
-    "types": [
-        "fire"
-    ]
-}
-var move = 55
-// calcDamage(move,lombre, vulpix )
+
+
 async function calcDamage(move, attacker, defender) {
   try {
+    console.log('move:',move.moveName, )
     const pokeMove = await movesService.getApiMoveById(move.moveName)
-    console.log('pokeMove: ' ,pokeMove)
-    console.log('pokeMove.accuracy: ',pokeMove.accuracy)
-    console.log('utilService.getRandomInt(0, 100): ',utilService.getRandomInt(0, 100))
-    if (pokeMove.accuracy >= utilService.getRandomInt(0, 100)) {
+    if ( pokeMove.accuracy === null || pokeMove.accuracy >= utilService.getRandomInt(0, 100)) {
       const [atk,def] = checkDmgClass(pokeMove,attacker.stats, defender.stats)
-      console.log('[atk,def] :',[atk,def])
+   
       const power = pokeMove.power;
-      console.log('power :',power)
+   
       const critical = isCriticalHit();
-      console.log('critical :',critical)
+    
       const dmgRel = await damageRelations(pokeMove.type.name, defender.types);
-      console.log('dmgRel :',dmgRel)
+      const LEVEL = 100;
       const FF = isPokeTypeSameTo(pokeMove.type.name, attacker.types);
-      console.log('FF :',FF)
+      
       const damage = Math.round((((((2 * LEVEL) / 5 + 2) * power * atk) / def / 50) * FF + 2) *critical *dmgRel);
       
       console.log('damage sum: ',damage);
       return damage
     }else{
       console.log('missed attack! damage: ', 0);
+      return 0
     } 
   } catch (error) {
     console.log(error)
   }
-
+ 
 }
 function isPokeTypeSameTo(moveType,pokeType ) {
   if(pokeType.indexOf(moveType) > -1){
