@@ -2,13 +2,20 @@
 <template>
   <section class="move-table">
         <div class="instructions-layer">
-            
-            <span class="inst-content">{{instructions}}</span>
+                <!-- :replace="replace"
+                :replace-interval="1000" -->
+            <Typewriter
+                :key="battleText"
+                class="inst-content"
+                :type-interval="50"
+            >
+                <div>{{battleText}}</div>
+            </Typewriter>
             <PartyBag
                 @menuSwitch="menuSwitch"
                 v-if="switches[1].val"/>
         </div>
-        <div class="user-options">
+        <div v-if="userAction" class="user-options">
             <div @click="menuSwitch(true,0)"
                 class="move-table-btn">Fight
             </div>
@@ -19,6 +26,7 @@
             <div class="move-table-btn">Quit</div>
         </div>
     <FightTable 
+        @clickMove="clickMove"
         @menuSwitch="menuSwitch"
         v-if="switches[0].val"/>
        
@@ -28,11 +36,13 @@
 <script>
 import FightTable from '@/components/fight-table.vue'
 import PartyBag from '@/components/party-bag.vue'
+import Typewriter from "typewriter-vue";
 
 export default {
     components:{
         FightTable,
-        PartyBag
+        PartyBag,
+        Typewriter
     },
     data(){
         return {
@@ -40,19 +50,23 @@ export default {
                 {name:'fightTable' , val: false},
                 {name:'partyBag' , val: false}
             ],
-            instructions:'',
-         
-            pokemon:null,
+            userAction: true,
+            // pokemon:null,
         }
     },
     watch:{
-        pokemon(){
-            
-        }
+     
     },
     computed:{
+    
+        battleText(){
+            return this.$store.getters.getBattleText
+        },
         userFrontPoke(){
             return this.$store.getters.getUserFront;
+        },
+        opponentFrontPoke(){
+            return this.$store.getters.getOpponentFrontPoke;
         },
     },
     methods:{
@@ -67,7 +81,17 @@ export default {
 
             })
             console.log('this.switches: ',this.switches)
-        }
+        },
+        async clickMove(move){
+            try {
+                // this.userAction = false
+                this.$store.dispatch({ type: "battleTurn", move})
+            } catch (error) {
+                console.log(error)
+            }
+           
+        },
+        
     },
         
 
@@ -79,22 +103,28 @@ export default {
     box-sizing: border-box;
     width: 700px;
     height: 120px;
-    background-color: #2c3e50;
+    background-color: #efefef;
     display: flex;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    border-radius: 0px 0px 4px 4px;
+    border: solid 5px #2c3e50;
+    // position: absolute;
+    width: 700px;
+    height: 120px;
    
     .instructions-layer{
-        
         width: 100%;
         display: flex;
         align-items:center;
-        span{
-            padding-left:20px;
-        }
+      
 
         .inst-content{
+            padding-left:20px;
             text-align: left;
             font-size: 20px;
-            color: #efefef;
+            color: #2c3e50;
         }
     }
 

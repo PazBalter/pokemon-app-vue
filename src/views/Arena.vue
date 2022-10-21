@@ -15,7 +15,7 @@
         />
     </div>
     <div v-else>
-        <div  v-if="showGameInst" > <GameInst @toggleGame="toggleGame"/></div>
+        <div  v-if="showGameInst" > <PreBattleBoard @toggleGame="toggleGame"/></div>
         <div v-else><PulseLoader/></div>
         
     </div>
@@ -28,7 +28,7 @@
 
 import NavBar from '@/components/nav-bar.vue'
 import BattleArena from '@/components/battle-arena.vue'
-import GameInst from '@/components/game-inst.vue'
+import PreBattleBoard from '@/components/pre-battle-board.vue'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 export default {
     name: 'Arena', 
@@ -36,7 +36,7 @@ export default {
         PulseLoader,
         NavBar,
         BattleArena,
-        GameInst,
+        PreBattleBoard,
 
     },
     data(){

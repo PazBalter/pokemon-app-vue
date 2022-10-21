@@ -47,13 +47,9 @@ export default {
         goToControlTable(){
             this.$emit("menuSwitch",false,0);
         },
-        async clickMove(move){
-            try {
-                this.$store.dispatch({ type: "battleTurn", move})
-            } catch (error) {
-                
-            }
-           
+        clickMove(move){
+            this.$emit("menuSwitch",false,0);
+            this.$emit("clickMove",move);
         },
     }
 }
