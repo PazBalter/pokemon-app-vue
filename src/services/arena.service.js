@@ -6,7 +6,11 @@ export const arenaService = {
     userTurn,
     botTurn,
     botBestSwitch,
+    botBestMove,
     isTherePokeLeft,
+    userAtkDmg,
+    calcAtkDmg,
+    delayAction,
   
 };
 
@@ -26,7 +30,7 @@ function gameAlgorithm(userPoke,botPoke,move){
 
 async function userTurn(move,userPoke,botPoke){
     try {
-        const damage = await damageService.calcDamage(move,userPoke,botPoke)
+        const damage = await damageService.createDamageObj(move,userPoke,botPoke)
      
         if(damage>botPoke.stats[0].points){
             botPoke.stats[0].points = 0
@@ -44,7 +48,7 @@ async function userTurn(move,userPoke,botPoke){
 async function botTurn(userPoke,botPoke){
     try {
         let move = await botBestMove(botPoke,userPoke)
-        const damage = await damageService.calcDamage(move,botPoke,userPoke)
+        const damage = await damageService.createDamageObj(move,botPoke,userPoke)
   
         if(damage>userPoke.stats[0].points){
             userPoke.stats[0].points = 0
@@ -62,14 +66,14 @@ async function botTurn(userPoke,botPoke){
 
 async function botBestMove(botPoke,userPoke){
     try {
-        const defenderTypes = userPoke.types
+        // const defenderTypes = userPoke.types
         const arrDmgRel = await Promise.all( botPoke.moves.map( async (move) => {
             return await damageService.damageRelations( move.type,userPoke.types)
 
         }))
         const max = Math.max(...arrDmgRel);
         const index = arrDmgRel.indexOf(max);
-
+       
         return botPoke.moves[index]
     } catch (error) {
         console.log(error)
@@ -84,3 +88,25 @@ function botBestSwitch(userPokeTypes,botPoke){
 function isTherePokeLeft(pokemon){
     return pokemon.stats[0].points > 0
 }
+async function userAtkDmg(move,userPoke,botPoke){
+    try {
+        const damageObj = await damageService.createDamageObj(move,userPoke,botPoke)
+        return damageObj
+    } catch (error) {
+        console.log(error)
+    }  
+}
+async function calcAtkDmg(move,attacker,defender){
+    try {
+        console.log(move)
+        const damageObj = await damageService.createDamageObj(move,attacker,defender)
+        return damageObj
+    } catch (error) {
+        console.log(error)
+    }  
+}
+function delayAction(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }

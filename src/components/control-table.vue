@@ -7,7 +7,7 @@
             <Typewriter
                 :key="battleText"
                 class="inst-content"
-                :type-interval="50"
+                :type-interval="25"
             >
                 <div>{{battleText}}</div>
             </Typewriter>

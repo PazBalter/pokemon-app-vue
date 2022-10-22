@@ -138,31 +138,52 @@ export default new Vuex.Store({
         console.log('You Win')
       }
     },
-    setTypeWriter(state,{act,move,userPoke,botPoke}) {
+    setTypeWriter(state,{act,move,atkPoke,defPoke}) {
       // console.log('setTypeWriter pokemon: ',userPoke)
       switch (act) {
-        case 'userAttack':
-          console.log('before userAttack.battleText: ',state.battleText)
-          state.battleText = `${userPoke.name} use ${move.moveName}!`;
-          break;
-        case 'botAttack':
-          console.log('before botAttack.battleText: ',state.battleText)
-          state.battleText = `${botPoke.name} use ${move.moveName}!`;
-          break;
-        case 'userPokeFaint':
-          console.log('before userPokeFaint.battleText: ',state.battleText)
-          state.battleText = `${userPoke.name} fainted!`;
-          break;
-        case 'botPokeFaint':
+        case 'default':
           console.log('before botPokeFaint.battleText: ',state.battleText)
-          state.battleText = `${botPoke.name} fainted!`;
+          state.battleText = `Choose your move!`;
+          break;
+        case 'attack':
+          console.log('before userAttack.battleText: ',state.battleText)
+          state.battleText = `${atkPoke.name.toUpperCase()} use ${move.moveName.toUpperCase()}!`;
+          break;
+        case 'pokeFaint':
+          console.log('before userPokeFaint.battleText: ',state.battleText)
+          state.battleText = `${defPoke.name.toUpperCase()} fainted!`;
+          break;
+        case 'critical':
+          console.log('before botPokeFaint.battleText: ',state.battleText)
+          state.battleText = `A critical hit!`;
+          break;
+        case 'superEffective':
+          console.log('before botPokeFaint.battleText: ',state.battleText)
+          state.battleText = `It's super effective!`;
+          break;
+        case 'attackHit':
+          console.log('before botPokeFaint.battleText: ',state.battleText)
+          state.battleText = `The attack hit!`;
+          break;
+        case 'notAffectedBy':
+          console.log('before botPokeFaint.battleText: ',state.battleText)
+          state.battleText = `It doesn't affect ${defPoke.name.toUpperCase()}...`;
+          break;
+        case 'notEffective':
+          console.log('before botPokeFaint.battleText: ',state.battleText)
+          state.battleText = `Its not very effective...`;
+          break;
+        case 'missed':
+          console.log('before botPokeFaint.battleText: ',state.battleText)
+          state.battleText = `${atkPoke.name.toUpperCase()}'s attack missed!`;
           break;
 
         default:
         
       }
       console.log('setTypeWriter battleText: ',state.battleText)
-    }
+    },
+    
   },
   actions: {
     async addPokemon({commit},{id}){
@@ -190,70 +211,154 @@ export default new Vuex.Store({
         console.log()
       }
     },
-    async battleTurn({commit,state},{move}){
+    async battleTurn({dispatch,commit,state},{move}){
       try {
         state.battleRound++
+        // const [attacker,defender] = 
+          // arenaService.getAttackerDefender(state.myPokemons[0],state.opponent.pokemons[0])
         let userPoke = state.myPokemons[0]
         let botPoke = state.opponent.pokemons[0]
-        let act
-        if(arenaService.isUserIsFaster(userPoke,botPoke)){
+        await dispatch({type:'firstAttackPhase',userPoke,botPoke,move})  
+        await dispatch({type:'secondAttackPhase',userPoke,botPoke,move})  
 
-          act = 'userAttack'
-          commit('setTypeWriter',{act,move,userPoke,botPoke})
-          botPoke = await arenaService.userTurn(move,userPoke,botPoke)
-          if(botPoke.stats[0].points === 0){
-            console.log('botSwitchPoke')
-            act = 'botPokeFaint'
-            commit('setTypeWriter',{act,move,userPoke,botPoke})
-            commit({type: 'botSwitchPoke',botPoke})
-          }else{
-            act = 'botAttack'
-            commit('setTypeWriter',{act,move,userPoke,botPoke})
-            userPoke = await arenaService.botTurn(userPoke,botPoke)
-            if(userPoke.stats[0].points === 0){
-              act = 'userPokeFaint'
-              commit('setTypeWriter',{act,move,userPoke,botPoke})
-              console.log('user have to switch')
-            }
-          }
+      //   let act
+      //   if(arenaService.isUserIsFaster(userPoke,botPoke)){
+
+      //     act = 'userAttack'
+      //     commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //     botPoke = await arenaService.userTurn(move,userPoke,botPoke)
+      //     if(botPoke.stats[0].points === 0){
+      //       console.log('botSwitchPoke')
+      //       act = 'botPokeFaint'
+      //       commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //       commit({type: 'botSwitchPoke',botPoke})
+      //     }else{
+      //       act = 'botAttack'
+      //       commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //       userPoke = await arenaService.botTurn(userPoke,botPoke)
+      //       if(userPoke.stats[0].points === 0){
+      //         act = 'userPokeFaint'
+      //         commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //         console.log('user have to switch')
+      //       }
+      //     }
           
-        }else{
-          act = 'botAttack'
-          commit('setTypeWriter',{act,move,userPoke,botPoke})
-          userPoke = await arenaService.botTurn(userPoke,botPoke)
-          if(userPoke.stats[0].points === 0){
-            console.log('user have to switch')
-            act = 'userPokeFaint'
-            commit('setTypeWriter',{act,move,userPoke,botPoke})
-          }else{
-            act = 'userAttack'
-            commit('setTypeWriter',{act,move,userPoke,botPoke})
-            botPoke = await arenaService.userTurn(move,userPoke,botPoke)
-            if(botPoke.stats[0].points === 0){
-              console.log('botSwitchPoke')
-              act = 'botPokeFaint'
-              commit('setTypeWriter',{act,move,userPoke,botPoke})
-              commit({type: 'botSwitchPoke',userPoke})
-            }
-          }
+      //   }else{
+      //     act = 'botAttack'
+      //     commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //     userPoke = await arenaService.botTurn(userPoke,botPoke)
+      //     if(userPoke.stats[0].points === 0){
+      //       console.log('user have to switch')
+      //       act = 'userPokeFaint'
+      //       commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //     }else{
+      //       act = 'userAttack'
+      //       commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //       botPoke = await arenaService.userTurn(move,userPoke,botPoke)
+      //       if(botPoke.stats[0].points === 0){
+      //         console.log('botSwitchPoke')
+      //         act = 'botPokeFaint'
+      //         commit('setTypeWriter',{act,move,userPoke,botPoke})
+      //         commit({type: 'botSwitchPoke',userPoke})
+      //       }
+      //     }
          
-        }
-        console.log('finish func battle Round: ',state.battleRound)
+      //   }
+      //   console.log('finish func battle Round: ',state.battleRound)
       } catch (error) {
         console.log(error)
       }
     },
-    async firstAttackPhase({state,commit},{}){
-
+    async firstAttackPhase({dispatch},{userPoke,botPoke,move}){
+       try {
+        console.log('firstAttackPhase: ',userPoke,botPoke,move)
+        if(arenaService.isUserIsFaster(userPoke,botPoke)){
+          await dispatch({type:"userAttackPhase",userPoke,botPoke,move})
+          await arenaService.delayAction(3000)
+          console.log("next act")
+        }else{
+          await dispatch({type:"botAttackPhase",userPoke,botPoke})
+          await arenaService.delayAction(3000)
+          console.log("next act")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+      
     },
-    async secondAttackPhase({state,commit},{}){
+    async userAttackPhase({state,commit,dispatch},{userPoke,botPoke,move}){
+      try {
+        commit('setTypeWriter',{act:'attack',move,atkPoke:userPoke,defPoke:botPoke})
+        await arenaService.delayAction(1500)
+        const damageObj = await arenaService.userAtkDmg(move,userPoke,botPoke)
+        console.log("before stats[0].points: ", botPoke.stats[0].points)
+        botPoke.stats[0].points = await dispatch({type:"pokeHpCalc",damage:damageObj.points,points:botPoke.stats[0].points})
+        console.log("after stats[0].points: ", botPoke.stats[0].points)
+        commit('setTypeWriter',{act:damageObj.cause,move,atkPoke:userPoke,defPoke:botPoke})
 
+      } catch (error) {
+        console.log(error)
+      }
+    
     },
-    async checkStausPhase({state,commit},{}){
+    async botAttackPhase({state,commit,dispatch},{userPoke,botPoke}){
+      try {
+        
+        const attack = await arenaService.botBestMove(botPoke,userPoke)
 
+        commit('setTypeWriter',{act:'attack',move:attack,atkPoke:botPoke,defPoke:userPoke})
+        console.log('attack: ',attack)
+        await arenaService.delayAction(1500)
+        let damageObj = await arenaService.calcAtkDmg(attack,botPoke,userPoke)
+        // await arenaService.delayAction(1000)
+        userPoke.stats[0].points = await dispatch({type:"pokeHpCalc",damage:damageObj.points,points:userPoke.stats[0].points})
+        commit('setTypeWriter',{act:damageObj.cause,move:attack,atkPoke:botPoke,defPoke:userPoke})
+      } catch (error) {
+        console.log(error)
+      }
+    
+    },
+    async pokeHpCalc({state,commit},{damage,points}){
+        try {
+
+          console.log("points: ",points)
+          console.log("damage: ",damage)
+          points = ( points > damage )? points - damage: 0;
+          return points
+        } catch (error) {
+          console.log(error)
+        }
+     
+    },
+    async secondAttackPhase({dispatch},{userPoke,botPoke,move}){
+      try {
+        console.log('secondAttackPhase: ',userPoke,botPoke,move)
+        if(!arenaService.isUserIsFaster(userPoke,botPoke)){
+          await dispatch({type:"userAttackPhase",userPoke,botPoke,move})
+          await arenaService.delayAction(3000)
+          console.log("next act")
+        }else{
+          await dispatch({type:"botAttackPhase",userPoke,botPoke})
+          await arenaService.delayAction(3000)
+          console.log("next act")
+        }  
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async checkStatsPhase({state,commit},{Pokemons}){
+      try {
+        
+      } catch (error) {
+        console.log(error)
+      }
     },
     async switchPhase({state,commit}){
-
+      try {
+        
+      } catch (error) {
+        console.log(error)
+      }
     }
 
   },

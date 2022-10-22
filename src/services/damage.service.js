@@ -5,35 +5,50 @@ const POKE_TYPES_URL = 'https://pokeapi.co/api/v2/type/';
 
 
 export const damageService = {
-  calcDamage,
+  createDamageObj,
   damageRelations
 
 };
 
 
 
-async function calcDamage(move, attacker, defender) {
+async function createDamageObj(move, attacker, defender) {
   try {
+    let damageObj = {
+      points: 0,
+      cause: "missed"
+    };
     console.log('move:',move.moveName, )
-    const pokeMove = await movesService.getApiMoveById(move.moveName)
+    let pokeMove = await movesService.getApiMoveById(move.moveName)
     if ( pokeMove.accuracy === null || pokeMove.accuracy >= utilService.getRandomInt(0, 100)) {
-      const [atk,def] = checkDmgClass(pokeMove,attacker.stats, defender.stats)
-   
-      const power = pokeMove.power;
-   
-      const critical = isCriticalHit();
-    
-      const dmgRel = await damageRelations(pokeMove.type.name, defender.types);
-      const LEVEL = 100;
-      const FF = isPokeTypeSameTo(pokeMove.type.name, attacker.types);
+
+      let [atk,def] = checkDmgClass(pokeMove,attacker.stats, defender.stats)
+      let power = pokeMove.power;
+      let critical = isCriticalHit();
+      let dmgRel = await damageRelations(move.type, defender.types);
+      let LEVEL = 100;
+      let FF = isPokeTypeSameTo(move.type, attacker.types);
       
-      const damage = Math.round((((((2 * LEVEL) / 5 + 2) * power * atk) / def / 50) * FF + 2) *critical *dmgRel);
+      damageObj.points = Math.round((((((2 * LEVEL) / 5 + 2) * power * atk) / def / 50) * FF + 2) *critical *dmgRel);
+      console.log("dmgRel: ",dmgRel)
+      if(dmgRel === 0){
+        damageObj.cause = "notAffectedBy"
+      }
+      else if(critical === 2){
+        damageObj.cause = "critical"
+      }
+      else if(dmgRel > 1){
+        damageObj.cause = "superEffective"
+      }
+      else if(dmgRel < 1){
+        damageObj.cause = "notEffective"
+      }else if(dmgRel === 1){
+        damageObj.cause = "attackHit"
+      }
       
-      console.log('damage sum: ',damage);
-      return damage
+      return damageObj
     }else{
-      console.log('missed attack! damage: ', 0);
-      return 0
+      return damageObj
     } 
   } catch (error) {
     console.log(error)
