@@ -81,7 +81,8 @@ async function PokeObject(pokemon){
         stats: statsService.CreateStatObject(pokemon.stats),
         moves: await movesService.createPokeMoves(pokemon.moves),
         types:pokeTypeArray(pokemon.types),
-        height: pokemon.height
+        height: pokemon.height,
+        isFaint:false
     }
     console.log('pokeObject.moves: ',pokeObject.moves)
     return pokeObject

@@ -7,7 +7,7 @@
                 v-for="(pokemon, index) in pokemons" :key= index>
                 <div class="poke-profile-bag-left">
                     <div class="slot-poke-pic">
-                        <div class="grey-layer">
+                        <div :class="{ 'grey-active': pokemon.isFaint }">
                             <img
                                 class="party-poke-img"
                                 :src="cardUrl + pokemon.id + '.png'"
@@ -24,7 +24,8 @@
                     <div class="bag-poke-profile-stats">
                         <div class="bag-hp-stat">
                             <span>HP</span>
-                            <span>{{pokemon.stats[0].points}} /
+                            <span ><span :class="{'zero-hp':pokemon.isFaint }">
+                              {{pokemon.stats[0].points}} </span>  /
                                 {{pokemon.stats[0].max}}</span>
                         </div>
                     </div>
@@ -48,15 +49,27 @@ export default {
     computed:{
         pokemons(){
             return this.$store.getters.getMyPokemons;
-        }
+        },
+        userFrontPoke(){
+        return this.$store.getters.getUserFront;
+        },
     },
     methods:{
         goToControlTable(){
             this.$emit("menuSwitch",false,1);
         },
         async switchToFrontPoke(index){
-            this.goToControlTable()
-            this.$store.dispatch({ type: "switchToFrontPoke", index })
+            if( this.userFrontPoke.id === this.pokemons[index].id ){
+                if( this.pokemons[index].isFaint ){
+                    alert('cannot fight')
+                }
+                alert('pokemon already fighting')
+            }else{
+                this.goToControlTable()
+                this.$store.dispatch({ type: "switchToFrontPoke", index })
+            }
+       
+           
         },
         addGlow(){
 
@@ -139,6 +152,9 @@ export default {
                     -webkit-filter: grayscale(100%); 
                     filter: grayscale(100%);
                 }
+        }
+        .zero-hp{
+            color: #fb5959;
         }
         .poke-profile-bag-right{
             border-radius: 0px 3px 3px 0px;

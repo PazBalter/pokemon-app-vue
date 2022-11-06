@@ -26,11 +26,16 @@
                 </div>
             </div>
             <button @click="toggleGame">lets go</button>
+            
         </div>
     </section>
 </template>
 <script>
+import EndbattleMenu from '@/components/end-battle-menu.vue' 
 export default {
+    components:{
+        EndbattleMenu
+    },
     data() {
         return {
         cardUrl:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/",

@@ -14,6 +14,9 @@
                     <PokeStats
                      :pokemon="opponentFrontPoke" />
                 </div>
+            <EndbattleMenu 
+            v-if="isEndGameMenuOn"
+            @quitGame="quitGame" />
                 <div  class="enemy-poke-img">
                     <div  >
                         <div v-if="opponentFrontPoke"  class="pipi">
@@ -59,10 +62,13 @@
 
 import PokeStats from './poke-stats.vue'
 import ControlTable from './control-table.vue'
+import EndbattleMenu from '@/components/end-battle-menu.vue' 
+
 export default {
     components:{
         PokeStats,
-        ControlTable
+        ControlTable,
+        EndbattleMenu,
     },
     props: [  
         'imageUrl',
@@ -92,21 +98,28 @@ export default {
         // console.log(this.opponentFrontPoke.id)
     },
     computed:{
-     opponent(){
-        return this.$store.getters.getOpponent;
-     },
-     opponentFrontPoke(){
-        return this.$store.getters.getOpponentFrontPoke;
-     },
-     userFrontPoke(){
-        return this.$store.getters.getUserFront;
-     },
-     userPokemons(){
-        return this.$store.getters.getMyPokemons;
-     }
+        opponent(){
+            return this.$store.getters.getOpponent;
+        },
+        opponentFrontPoke(){
+            return this.$store.getters.getOpponentFrontPoke;
+        },
+        userFrontPoke(){
+            return this.$store.getters.getUserFront;
+        },
+        userPokemons(){
+            return this.$store.getters.getMyPokemons;
+        },
+        isEndGameMenuOn(){
+            return this.$store.getters.getIsEndGameMenuOn
+        }
+
     },
 
     methods:{
+        quitGame(){
+            this.$emit("quitGame");
+        },
         async setNewTrainer(){
             try {           
                 await this.setNewTrainerByLevel()

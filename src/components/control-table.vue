@@ -11,11 +11,11 @@
             >
                 <div>{{battleText}}</div>
             </Typewriter>
-            <PartyBag
+            <PartyBag 
                 @menuSwitch="menuSwitch"
                 v-if="switches[1].val"/>
         </div>
-        <div v-if="userAction" class="user-options">
+        <div v-if="isUserAction" class="user-options">
             <div @click="menuSwitch(true,0)"
                 class="move-table-btn">Fight
             </div>
@@ -51,14 +51,22 @@ export default {
                 {name:'partyBag' , val: false}
             ],
             userAction: true,
+            pokeSwitch: false
             // pokemon:null,
         }
     },
+   
     watch:{
-     
+        // pokeSwitch(){
+        //     if(this.isUserSwitch){
+        //         this.menuSwitch(true,1)
+        //     }
+        // },
     },
     computed:{
-    
+        isUserSwitch(){
+            return this.$store.getters.getIsUserSwitch
+        },
         battleText(){
             return this.$store.getters.getBattleText
         },
@@ -68,6 +76,9 @@ export default {
         opponentFrontPoke(){
             return this.$store.getters.getOpponentFrontPoke;
         },
+        isUserAction(){
+            return this.$store.getters.getIsUserAction
+        }
     },
     methods:{
         menuSwitch(value,i){
@@ -85,7 +96,7 @@ export default {
         async clickMove(move){
             try {
                 // this.userAction = false
-                this.$store.dispatch({ type: "battleTurn", move})
+                this.$store.dispatch({ type: "battleRound", move})
             } catch (error) {
                 console.log(error)
             }
@@ -132,21 +143,28 @@ export default {
         display: grid;
         grid-template-columns: 1fr 1fr;
         box-sizing: border-box;
-        border-radius: 5px 0px 5px 5px;
+        border-radius: 5px 0px 0px 5px;
         width: 350px;
-        padding: 10px;
-        background-color: rgb(250, 229, 167);
+        // padding: 10px;
+        background-color: #2c3e50;
         box-shadow: 0 15px 30px rgba(0,0,0,.2),
                     0 15px 30px rgba(0,0,0,.2);
         .move-table-btn{
+            font-family: bold;
+            color: #efefef;
+            box-sizing: border-box;
             display: flex;
             justify-content: center;
-            align-content: center;
+            align-items: center;
             outline: none;
             border: none;
             padding: 10px 20px;
             cursor: pointer;
-
+            transition: 0.1s;
+            &:hover{
+                background-color: #2d5f91;
+                color:  rgb(247, 197, 48);
+            }
         }
     }
 

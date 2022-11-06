@@ -13,6 +13,7 @@ async function CreateTrainer(level = 0){
         const trainer = {
             difficulty: level,
             pokemons: await trainerPokeTeam(level),
+            isCantBattle:false
         }
         return trainer
     }catch(error){

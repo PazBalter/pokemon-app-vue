@@ -18,7 +18,8 @@ async function createPokeMoves(allPokeMoves){
       {moveName: "", type: "",id: null, power: null, accuracy: null}
     ]
     const movesLen = allPokeMoves.length
-  if(movesLen < 4){
+    const powerArrMoves = await getPowerArrMoves(allPokeMoves)
+  if(powerArrMoves < 4){
     pokeMoves[0].moveName = allPokeMoves[0].move.name
     pokeMoves[0].type = "normal"
     pokeMoves.forEach((move)=>{
@@ -30,7 +31,7 @@ async function createPokeMoves(allPokeMoves){
     });
     return pokeMoves 
   }else{
-    const powerArrMoves = await getPowerArrMoves(allPokeMoves)
+    
     
     const arrId = utilService.GenrateArrUniqeNum(powerArrMoves.length);
     // pokeMoves.forEach((move,index) => {

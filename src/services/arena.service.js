@@ -72,9 +72,25 @@ async function botBestMove(botPoke,userPoke){
 
         }))
         const max = Math.max(...arrDmgRel);
-        const index = arrDmgRel.indexOf(max);
-       
-        return botPoke.moves[index]
+        // const index = arrDmgRel.indexOf(max);
+
+        // const bestMoveIndices = [];
+        // const array = ['a', 'b', 'a', 'c', 'a', 'd'];
+        // const element = max;
+        let idx = arrDmgRel.indexOf(max);
+        // while (idx !== -1) {
+        //     bestMoveIndices.push(idx);
+        //     idx = arrDmgRel.indexOf(max, idx + 1);
+        // }
+        const bestMoveIndices = [];
+        arrDmgRel.forEach((dmg ,index) =>{
+            if(dmg === max){
+                bestMoveIndices.push(index);
+            }
+        })
+        // console.log("arrddd: ",arrddd);
+        const randomIndex = Math.floor(Math.random() * bestMoveIndices.length);
+        return botPoke.moves[bestMoveIndices[randomIndex]]
     } catch (error) {
         console.log(error)
     }
@@ -109,4 +125,4 @@ function delayAction(ms) {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
-  }
+}

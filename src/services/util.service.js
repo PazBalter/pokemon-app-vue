@@ -13,6 +13,7 @@ function delay(ms = 1500) {
 }
 
 function getRandomInt(min, max) {
+    // console.log("min: ",min, "max: ",max);
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive

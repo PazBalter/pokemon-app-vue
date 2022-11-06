@@ -6,9 +6,10 @@
         :imageUrl="imageUrl"
     />
     <div class="space-maker"></div>
-
+    
     <div v-if="gameIsOn" >
         <BattleArena
+            @quitGame="quitGame"
             :imageUrl="imageUrl"
             :apiUrl="apiUrl"
             :pokeMovesUrl="pokeMovesUrl"
@@ -19,7 +20,7 @@
         <div v-else><PulseLoader/></div>
         
     </div>
-  
+    
     
     </section>
 </template>
@@ -30,6 +31,7 @@ import NavBar from '@/components/nav-bar.vue'
 import BattleArena from '@/components/battle-arena.vue'
 import PreBattleBoard from '@/components/pre-battle-board.vue'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+
 export default {
     name: 'Arena', 
     components:{
@@ -37,6 +39,7 @@ export default {
         NavBar,
         BattleArena,
         PreBattleBoard,
+        
 
     },
     data(){
@@ -59,6 +62,9 @@ export default {
         }
     },
     methods:{
+        quitGame(){
+            this.showGameInst = true;
+        },
         getApiUrl(){
             return this.$store.getters.getPokeApiUrl;
         },
@@ -80,10 +86,10 @@ export default {
             this.partyCmpReload()
         },
         async setNewTrainerByLevel(){
-            let level = 3
-            await this.$store.dispatch({ type: "setNewOpponent", level });
+            await this.$store.dispatch({ type: "setNewOpponent"});
             // return this.$store.getters.getEnemyTrainer;
         },
+    
         async toggleGame(){
            try {
                this.showGameInst = false
@@ -91,7 +97,6 @@ export default {
            } catch (error) {
             console.log(error)
            }
-     
         //    this.$store.commit({type: "toggleGame"})
         }
     },

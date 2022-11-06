@@ -1,6 +1,7 @@
 <template>
     <section class="poke-detail" >
         <div class="poke-prev" v-if="show">
+            <!-- <div class="add-party-load" v-if="isLoading"><PulseLoader/></div> -->
             <div v-if="pokemon" class="poke-img">
                 <img :src="imageUrl + pokemon.id + '.png'" alt="">
             </div>
@@ -25,6 +26,7 @@
                         :key="'value'+index">{{value.type.name}}
                     </div>
                 </div>
+                
             <div v-if="checkedPokeId">
                 <button v-if="partySlots" class="detail-btn party" @click.once="addParty">Add Pokemon</button>  
                 <button v-else class="detail-btn is-full">Party Is Full</button>  
@@ -39,7 +41,7 @@
             <h2 v-else>The pokemon was not found</h2>
             <button class="detail-btn" @click="closeDetail">Close</button>  
             
-    
+            
         </div>
         <div class="loader-pos" v-if="!show"><PulseLoader/></div>
     </section>
@@ -60,6 +62,7 @@ export default{
     data:()=>{
         return{
             slots: true,
+            isLoading: false,
             show: false,
             pokemon: {},
 
@@ -84,10 +87,10 @@ export default{
     methods:{
         async fetchData(){
             try {
+                this.show = true
                 let result = await fetch(this.pokemonUrl);
                 let data = await result.json();
                 this.pokemon = data;
-                this.show = true;
                 this.checkId() 
             } catch (error) {
                 console.log(error);
@@ -99,12 +102,15 @@ export default{
         },
         async addParty(){
             try {
-            const id = this.pokemon.id
-            this.checkId()
-            this.$store.dispatch({ type: "addPokemon", id });
-            this.checkId()
+                this.isLoading = true;
+                const id = this.pokemon.id
+                this.checkId()
+                await this.$store.dispatch({ type: "addPokemon", id });
+                this.checkId()
             } catch (error) {
                 console.log(error)
+            }finally{
+                this.isLoading = false
             }
        
         },
@@ -134,6 +140,13 @@ export default{
     height: calc(100vh - 20px);
     background: rgba($color: #000000, $alpha: .7);
 
+    .add-party-load{
+        background-color:  rgba($color: #000000, $alpha: .7);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        padding: 85px 0 0;
+    }
  
     .poke-prev{
         display: flex;
