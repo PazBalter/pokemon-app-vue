@@ -46,7 +46,6 @@ export default {
       apiUrl:'',
       pokemonUrl: '',
       showDetail: false,
-      // partyReload: 0 ,
     }
   },
   created(){
@@ -54,10 +53,10 @@ export default {
    this.imageUrl = this.getImageUrl()
   }, 
   methods:{
-    getApiUrl() {
+    getApiUrl(){
       return this.$store.getters.getPokeApiUrl;
     },
-    getImageUrl() {
+    getImageUrl(){
       return this.$store.getters.getPokeImageUrl;
     },
     setPokemonUrl(url){

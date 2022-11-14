@@ -26,9 +26,9 @@ export default new Vuex.Store({
     battleRound:0,
     battleText:  "Choose your move!" ,
     isUserSwitch: false,
-    isUserAction: true,
+    isUserAction: false,
     isUserLost: false,
-    gameLevel:5,
+    gameLevel:1,
     isEndGameMenuOn: false,
   },
   getters: {
@@ -81,8 +81,6 @@ export default new Vuex.Store({
       console.log('getGameIsOn: ',state.gameIsOn)
       return state.gameIsOn
     },
-   
-
   },
   mutations: {
     setGameLevel(state){
@@ -231,7 +229,15 @@ export default new Vuex.Store({
           console.log('before goPoke.battleText: ',state.battleText)
           state.battleText = `Go! ${atkPoke.name.toUpperCase()}!`;
           break;
-
+        case 'userMustSwitch':
+          console.log('before goPoke.battleText: ',state.battleText)
+          state.battleText = `${defPoke.name.toUpperCase()} can not fight choose your next pokemon!`;
+          break;
+        case 'needSwitch':
+          console.log('before goPoke.battleText: ',state.battleText)
+          state.battleText = `${defPoke.name.toUpperCase()} fainted! choose your next pokemon!`;
+          break;
+        
         default:
         
       }
@@ -258,6 +264,7 @@ export default new Vuex.Store({
       }finally{
         console.log('finally: set opponent')
         commit({type: 'toggleGame'})
+        commit({type:"toggleUserAction"})
       }
     },
     async switchToFrontPoke({dispatch,commit,state},{index}){
@@ -282,6 +289,7 @@ export default new Vuex.Store({
     },
     async middleBattleSwitch({dispatch,commit,state},{index}){
       try {
+
         commit({type: 'toggleUserAction'})
         state.battleRound++
         let userPoke = state.myPokemons[0]
@@ -294,6 +302,11 @@ export default new Vuex.Store({
         commit({type: 'switchPokeIdx',index})
         await arenaService.delayAction(1500)
         await dispatch({type:'botAttackPhase',userPoke,botPoke})
+        if( await dispatch({type:'isPokeFaint',userPoke:userNextPoke,botPoke:null})){
+          console.log("hehehee ")
+        }else{
+          commit('setTypeWriter',{act:"default",move:null,atkPoke:userNextPoke,defPoke:null})
+        }
       } catch (error) {
         console.log(error)
       } finally{
@@ -313,7 +326,7 @@ export default new Vuex.Store({
           if(state.isUserLost || state.opponent.isCantBattle){
             console.log("ya fs")
           }else{
-            commit('setTypeWriter',{act:"default",move:null,atkPoke:userPoke,defPoke:null})
+            // commit('setTypeWriter',{act:"default",move:null,atkPoke:userPoke,defPoke:null})
           }
           // commit('setTypeWriter',{act:"default",move:null,atkPoke:userPoke,defPoke:null})
         }else{
@@ -323,7 +336,7 @@ export default new Vuex.Store({
             if(state.isUserLost || state.opponent.isCantBattle){
               console.log("ya fs")
             }else{
-              commit('setTypeWriter',{act:"default",move:null,atkPoke:userPoke,defPoke:null})
+              // commit('setTypeWriter',{act:"default",move:null,atkPoke:userPoke,defPoke:null})
             }
           }else{
             commit('setTypeWriter',{act:"default",move:null,atkPoke:userPoke,defPoke:null})
@@ -333,7 +346,12 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }finally{
-        commit({type: 'toggleUserAction'})
+        if(state.isUserCanNotBattle || state.opponent.isCantBattle){
+
+        }else{
+          commit({type: 'toggleUserAction'})
+        }
+       
       }
     },
     async firstAttackPhase({dispatch},{userPoke,botPoke,move}){
@@ -428,9 +446,10 @@ export default new Vuex.Store({
             commit({type:"setNewText",txt:"Game Over!"})
             commit({type:"toggleEndGameMenu"})
           }else{
+            await arenaService.delayAction(1000)
+            commit('setTypeWriter',{act:'userMustSwitch',move:null,atkPoke:null,defPoke:userPoke})
             commit({type:'onUserSwitch'})
           }
-        //  commit({type:'onUserSwitch'})
           return true
         }else if(botPoke.isFaint){
 
@@ -477,7 +496,13 @@ export default new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
+    },
+    async pokemonCantFight({commit},{pokemon}){
+      try {
+        commit('setTypeWriter',{act:'needSwitch',move:null,atkPoke:null,defPoke:pokemon})
+      } catch (error) {
+        console.log(error)
+      }
     }
-
   },
 })

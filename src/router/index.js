@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import About from '../views/About.vue'
 import Arena from '../views/Arena.vue'
 
 Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
@@ -15,6 +15,11 @@ const routes = [
     path: '/arena',
     name: 'arena',
     component: Arena
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: About
   },
 
 ]

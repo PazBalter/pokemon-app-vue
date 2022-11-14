@@ -15,18 +15,18 @@
              />
             <!-- :key="partyReload" -->
           </li>
+          <li><router-link class="link" :to="{ name: 'home' }">Pokedex</router-link></li>
           <li><router-link class="link" :to="{ name: 'arena' }">Arena</router-link></li>
-          <li><router-link class="link" :to="{ name: 'home' }">About us</router-link></li>
-          <li><router-link class="link" :to="{ name: 'home' }">Contact</router-link></li>
+          <li><router-link class="link" :to="{ name: 'about' }">About us</router-link></li>
         </ul>
         <div class="hamburger-icon">
             <i @click="toggleMobileNav" v-show="mobile" class="far fa-bars material-symbols-outlined" :class="{'icon-active': mobileNav}">menu</i>
         </div>
         <transition name="mobile-nav">
           <ul v-show="mobileNav" class="dropdown-nav">
-            <li><router-link class="link" :to="{ name: 'home' }">Shop</router-link></li>
-            <li><router-link class="link" :to="{ name: 'home' }">About us</router-link></li>
-            <li><router-link class="link" :to="{ name: 'home' }">Contact</router-link></li>
+            <li><router-link class="link" :to="{ name: 'home' }">Pokedex</router-link></li>
+            <li><router-link class="link" :to="{ name: 'arena' }">Arena</router-link></li>
+            <li><router-link class="link" :to="{ name: 'about' }">About us</router-link></li>
           </ul>
         </transition>
       </nav>

@@ -28,6 +28,7 @@
                               {{pokemon.stats[0].points}} </span>  /
                                 {{pokemon.stats[0].max}}</span>
                         </div>
+                            <span class="zero-hp" v-if="pokemon.isFaint">FNT</span>    
                     </div>
                     
                 </div>        
@@ -60,13 +61,15 @@ export default {
         },
         async switchToFrontPoke(index){
             if( this.userFrontPoke.id === this.pokemons[index].id ){
-                if( this.pokemons[index].isFaint ){
-                    alert('cannot fight')
-                }
                 alert('pokemon already fighting')
             }else{
-                this.goToControlTable()
-                this.$store.dispatch({ type: "switchToFrontPoke", index })
+                if( this.pokemons[index].isFaint ){
+                    this.$store.dispatch({ type: "pokemonCantFight", pokemon:this.userFrontPoke})
+                }else{
+                    this.goToControlTable()
+                    this.$store.dispatch({ type: "switchToFrontPoke", index })
+                }
+               
             }
        
            
@@ -82,6 +85,7 @@ export default {
 <style lang="scss" scoped>
 
 .party-bag{
+    
     padding-left:20px;
     display: flex;
     flex-direction: row;
@@ -100,9 +104,11 @@ export default {
     .bag-container{
         gap: 10px;
         display: flex;
-        flex-direction: row; 
+        flex-direction: row;
+        
     }
     .party-bag-back-btn{
+        cursor: pointer;
         margin-right:20px;
         padding: 10px 20px 10px 20px;
         background-color: #2c3e50;
@@ -111,6 +117,7 @@ export default {
     
 
     .poke-profile-bag{
+        cursor: pointer;
         height: 80px;
         background-color: #efefef;
         border: solid 3px #2c3e50;

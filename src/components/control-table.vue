@@ -82,7 +82,10 @@ export default {
     },
     methods:{
         menuSwitch(value,i){
-            this.switches.forEach((toggle,index) => {
+            if(this.userFrontPoke.isFaint && i === 0){
+                this.$store.dispatch({ type: "pokemonCantFight", pokemon:this.userFrontPoke})
+            }else{
+                this.switches.forEach((toggle,index) => {
                 if(index === i){
                     console.log(value)
                     toggle.val = value
@@ -91,6 +94,8 @@ export default {
                 }
 
             })
+            }
+            
             console.log('this.switches: ',this.switches)
         },
         async clickMove(move){
