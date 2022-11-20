@@ -119,13 +119,12 @@ export default {
     box-sizing: border-box;
     width: 700px;
     height: 120px;
-    background-color: #efefef;
+    background-color: rgb(250, 229, 167);
     display: flex;
     display: flex;
     flex-direction: row;
     box-sizing: border-box;
     border-radius: 0px 0px 4px 4px;
-    border: solid 5px #2c3e50;
     // position: absolute;
     width: 700px;
     height: 120px;

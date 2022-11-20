@@ -72,6 +72,7 @@ export default {
 
 <style lang="scss" scoped>
     .fight-table{
+        box-sizing: border-box;
         display: flex;
         flex-direction: row;
         box-sizing: border-box;
@@ -80,7 +81,7 @@ export default {
         position: absolute;
         width: 700px;
         height: 120px;
-        background-color: #efefef;
+        background-color: rgb(250, 229, 167);
         box-shadow: 0 15px 30px rgba(0,0,0,.2),
                     0 15px 30px rgba(0,0,0,.2);
 
@@ -173,7 +174,7 @@ export default {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 0px 30px 0px 30px;
+            margin: 0px 25px 0px 15px;
             font-family: 'Courier New', Courier, monospace;
             font-size: 1rem;
             .typing-circle{
@@ -205,13 +206,15 @@ export default {
         .back-btn{
             outline: none;
             border: none;
-            border-radius: 5px;
-            background-color: #01a25a;
             color: #efefef;
             padding: 10px 10px;
             font-size: 1rem;
             cursor: pointer;
             transition: 0.2s;
+            padding: 10px 20px 10px 20px;
+            background-color: #2c3e50;
+            color: #efefef;
+            border-radius: 6px;
         }    
         }
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <NavBar 
+    <NavBar class="nav-pos-fixed"
       :imageUrl="imageUrl"
       @spliceFromParty="spliceFromParty"
       @randomPokeMoves="randomPokeMoves"
@@ -82,12 +82,15 @@ export default {
 .home{
   min-height: 100vh; 
   
-.space-maker{
-  padding-top: 120px ;
-}
-.home-search{
-  padding-bottom: 20px 
-}
+  .nav-pos-fixed{
+    position: fixed;
+  }
+  .space-maker{
+    padding-top: 120px ;
+  }
+  .home-search{
+    padding-bottom: 20px 
+  }
 }
 
  

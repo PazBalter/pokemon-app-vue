@@ -8,16 +8,16 @@
         <ul v-show="!mobile" class="navigation">
           <li>
             <PokeParty
-            @randomPokeMoves="randomPokeMoves"
-            @popFromParty="popFromParty"
-            @closeParty="closeParty"
-            :imageUrl="imageUrl"
+              @randomPokeMoves="randomPokeMoves"
+              @popFromParty="popFromParty"
+              @closeParty="closeParty"
+              :imageUrl="imageUrl"
              />
             <!-- :key="partyReload" -->
           </li>
           <li><router-link class="link" :to="{ name: 'home' }">Pokedex</router-link></li>
           <li><router-link class="link" :to="{ name: 'arena' }">Arena</router-link></li>
-          <li><router-link class="link" :to="{ name: 'about' }">About us</router-link></li>
+          <li><router-link class="link" :to="{ name: 'about' }">About</router-link></li>
         </ul>
         <div class="hamburger-icon">
             <i @click="toggleMobileNav" v-show="mobile" class="far fa-bars material-symbols-outlined" :class="{'icon-active': mobileNav}">menu</i>
@@ -108,8 +108,6 @@ header{
   transition: 0.5s ease all;
   color: #fff;
   z-index: 10;
-  position: fixed;
-  margin-bottom: 5%;
 
   nav{
     position: relative;

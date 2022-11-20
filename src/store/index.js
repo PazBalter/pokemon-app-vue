@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 import {utilService} from '@/services/util.service'
 import {movesService} from '@/services/moves.service'
 import {statsService} from '@/services/stats.service'
@@ -110,6 +109,14 @@ export default new Vuex.Store({
        
       };
     },
+    popFromParty(state,{pokeId}){
+      state.myPokemons.forEach((poke,index) => {
+        if(poke.id === pokeId){
+          state.myPokemons.splice(index,1);
+          state.partySlots = state.partySlots + 1;
+        }
+      });
+    },
     spliceIndexFromParty(state,{index}){
       state.myPokemons.splice(index,1);
       state.partySlots = state.partySlots + 1;
@@ -135,15 +142,12 @@ export default new Vuex.Store({
       state.gameIsOn? state.gameIsOn = false : state.gameIsOn = true ;
       console.log('store-toggleGame: ',state.gameIsOn)
     },
-    setRandomMoves(state,{pokeIdAndMoves}){
-      // state.myPokemonsMoves.forEach((id,index)=>{
-      //   if(state.myPokemonsMoves[index].pokeId === pokeIdAndMoves.id){
-      //     console.log(pokeIdAndMoves.id)
-      //     console.log(pokeIdAndMov9es.moveLength)
-      //     state.myPokemonsMoves[index]= movesService.createPokeMoves(pokeIdAndMoves.id,pokeIdAndMoves.moveLength)
-      //   }
-      // })
-      console.log('Coming Soon')
+    setNewPokeMoves(state,{pokeId,pokeMoves}){
+      state.myPokemons.forEach(poke =>{
+        if(poke.id = pokeId){
+          poke.moves = pokeMoves
+        }
+      })
     },
     botSwitchPoke(state,{userPoke}){
       // console.log( state.opponent.pokmons.some((poke) => poke.stats[0].points > 0))
@@ -177,7 +181,7 @@ export default new Vuex.Store({
     },
     setTypeWriter(state,{act,move,atkPoke,defPoke}) {
       switch (act) {
-        case 'default':
+        case 'default':// make default para
           console.log('before default.battleText: ',state.battleText)
           state.battleText = `What will ${atkPoke.name.toUpperCase()} do!`;
           break;
@@ -249,6 +253,16 @@ export default new Vuex.Store({
     
   },
   actions: {
+    async changPokeMoves({commit,state},{pokeId}){
+      try {
+        let allPokeMoves =  await pokeService.getPokeMovesById(pokeId)
+        console.log("allPokeMoves: ",allPokeMoves)
+        let pokeMoves = await movesService.createPokeMoves(allPokeMoves)
+        commit({type:'setNewPokeMoves',pokeId,pokeMoves})
+      } catch (error) {
+        console.log(error)
+      }
+    },
     async addPokemon({commit},{id}){
       const pokemon = await pokeService.CreatePokeObject(id)
       commit({type: 'setMyPokemons',pokemon})

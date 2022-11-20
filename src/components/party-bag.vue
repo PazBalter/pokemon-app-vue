@@ -109,10 +109,11 @@ export default {
     }
     .party-bag-back-btn{
         cursor: pointer;
-        margin-right:20px;
+        margin-right:25px;
         padding: 10px 20px 10px 20px;
         background-color: #2c3e50;
         color: #efefef;
+        border-radius: 6px;
     }
     
 

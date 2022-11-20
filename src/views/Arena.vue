@@ -5,7 +5,6 @@
         @spliceFromParty="spliceFromParty"
         :imageUrl="imageUrl"
     />
-    <div class="space-maker"></div>
     
     <div v-if="gameIsOn" >
         <BattleArena

@@ -6,6 +6,7 @@ import {movesService} from '@/services/moves.service'
 export const pokeService = {
     CreatePokeObject,
     createPokeObjectByLevel,
+    getPokeMovesById,
 
 }
 const POKE_URL = 'https://pokeapi.co/api/v2/pokemon/'  
@@ -47,6 +48,16 @@ async function fetchPokeDataById(id){
         let result = await fetch( POKE_URL + id);
         let data = await result.json();
         return data;
+    } catch (error) {
+        console.log(error);
+    }
+  
+}
+async function getPokeMovesById(id){
+    try {
+        let result = await fetch( POKE_URL + id);
+        let data = await result.json();
+        return data.moves;
     } catch (error) {
         console.log(error);
     }
