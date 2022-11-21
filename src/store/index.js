@@ -144,7 +144,7 @@ export default new Vuex.Store({
     },
     setNewPokeMoves(state,{pokeId,pokeMoves}){
       state.myPokemons.forEach(poke =>{
-        if(poke.id = pokeId){
+        if(poke.id === pokeId){
           poke.moves = pokeMoves
         }
       })

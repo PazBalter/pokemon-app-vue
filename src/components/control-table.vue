@@ -23,7 +23,7 @@
                 class="move-table-btn">Pokemons
             </div>
             <div class="move-table-btn">Tutorial</div>
-            <div class="move-table-btn">Quit</div>
+            <div class="move-table-btn" @click="quitGame" >Quit</div>
         </div>
     <FightTable 
         @clickMove="clickMove"
@@ -57,11 +57,6 @@ export default {
     },
    
     watch:{
-        // pokeSwitch(){
-        //     if(this.isUserSwitch){
-        //         this.menuSwitch(true,1)
-        //     }
-        // },
     },
     computed:{
         isUserSwitch(){
@@ -81,6 +76,10 @@ export default {
         }
     },
     methods:{
+        quitGame(){
+            this.$store.commit({ type: "toggleGame"});
+            this.$emit("quitGame");
+        },
         menuSwitch(value,i){
             if(this.userFrontPoke.isFaint && i === 0){
                 this.$store.dispatch({ type: "pokemonCantFight", pokemon:this.userFrontPoke})

@@ -8,8 +8,8 @@
             <div v-if="pokemon" class="data">
                 <h2>{{pokemon.name}}</h2>
                 <div class="property">
-                    <div class="left">Base Experience</div>
-                    <div class="right">{{pokemon.base_experience}} XP</div>
+                    <div class="left">Total Base Stats</div>
+                    <div class="right">{{totalStats}}</div>
                 </div>
                 <div class="property">
                     <div class="left">Height</div>
@@ -28,11 +28,11 @@
                 </div>
                 
             <div v-if="checkedPokeId">
-                <button v-if="partySlots" class="detail-btn party" @click.once="addParty">Add Pokemon</button>  
+                <button v-if="partySlots" class="detail-btn party" @click.once="addParty"><span>Add Pokemon</span> <div class="ring-loader" v-if="isLoading"><PulseLoader class="ring-loader"/></div></button>  
                 <button v-else class="detail-btn is-full">Party Is Full</button>  
             </div>
             <div  v-else>
-                <button v-if="partySlots" class="detail-btn added">Pokemon Added</button>
+                <button v-if="partySlots" class="detail-btn added"><span>Add Pokemon</span><div class="ring-loader" v-if="isLoading"><PulseLoader class="ring-loader"/></div></button>
                 <button v-else class="detail-btn is-full">Party Full</button>  
             </div>
          
@@ -50,6 +50,7 @@
 
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import RingLoader from 'vue-spinner/src/RingLoader.vue'
 
 export default{
     props:[
@@ -57,7 +58,8 @@ export default{
         'imageUrl',
     ],
     components:{
-        PulseLoader
+        PulseLoader,
+        RingLoader
     },
     data:()=>{
         return{
@@ -65,6 +67,7 @@ export default{
             isLoading: false,
             show: false,
             pokemon: {},
+            totalStats:0,
 
         }
     },
@@ -92,13 +95,22 @@ export default{
                 let data = await result.json();
                 this.pokemon = data;
                 this.checkId() 
+                this.totalStats = this.calcTotalStats(data.stats)
             } catch (error) {
                 console.log(error);
             }
           
         },
+        calcTotalStats(stats){
+            let total = stats.reduce((acc, statObj) => acc + statObj.base_stat, 0)
+            return total
+        },
         closeDetail(){
-            this.$emit('closeDetail');
+            if(this.isLoading){
+                alert("loading Pokemon")
+            }else{
+                this.$emit('closeDetail')
+            }
         },
         async addParty(){
             try {
@@ -243,8 +255,13 @@ export default{
             margin-bottom: 20px;
             font-size: 1.2rem;
             cursor: pointer;
+            .ring-loader{
+               margin-left: 5px;
+            }
         }
             .party{
+                display: flex;
+                flex-direction: row;
                 background-color: #ffe600;
                 color: #333;
                 margin: 20px 0px 0px 0px;

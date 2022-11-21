@@ -35,37 +35,48 @@
                   :class="{'click-overlay' : showStats}"
                 >
                   <div>
-                    HP:{{pokemon.stats[0].max}}
+                    <div>
+                      HP:{{pokemon.stats[0].max}}
+                    </div>
+                    <div>
+                     Atk:{{pokemon.stats[1].points}}
+                    </div>
                   </div>
                   <div>
-                    Atk:{{pokemon.stats[1].points}}
+                    <div>
+                      Def:{{pokemon.stats[2].points}}
+                    </div>
+                    <div>
+                      S.Atk:{{pokemon.stats[3].points}}
+                    </div>
                   </div>
                   <div>
-                    Def:{{pokemon.stats[2].points}}
+                    <div>
+                      S.Def:{{pokemon.stats[4].points}}
+                    </div>
+                    <div>
+                      Speed:{{pokemon.stats[5].points}}
+                    </div>
                   </div>
-                  <div>
-                    S.Atk:{{pokemon.stats[3].points}}
-                  </div>
-                  <div>
-                    S.Def:{{pokemon.stats[4].points}}
-                  </div>
-                  <div>
-                    Speed:{{pokemon.stats[5].points}}
-                  </div>
+                    
+                  
+                  
                 </div>
                 
               </li>
               <li class="types-container" @click="showTypes = !showTypes" >
                 pokemon types
-                <div  class="overlay"
+                <div  class="overlay centerd"
                   :class="{'click-overlay' : showTypes}"
                 >
-                  <div 
-                    class="type"
-                    v-for="(value, index) in pokemon.types"
-                    :key="'value' + index"
-                  >
-                    {{value}}
+                  <div>
+                      <div 
+                      class="type"
+                      v-for="(value, index) in pokemon.types"
+                      :key="'value' + index"
+                    >
+                      {{value}}
+                    </div>
                   </div>
                 </div>
                 
@@ -278,6 +289,11 @@
           position: relative;
           
           .overlay{
+            display: flex;
+           
+            justify-content:space-around ;
+            align-items: center;
+            align-content: center;
             position: absolute;
             bottom: 100%;
             left: 0;
@@ -295,6 +311,11 @@
 
         }
         .stats-container{
+          
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 15px;
         }
         .types {
             display: flex;

@@ -148,6 +148,8 @@ export default {
         }
         .search-warper{
             display: flex;
+            align-items: center;
+            align-content: center;
             justify-content: center;
         }
         input{
@@ -162,7 +164,7 @@ export default {
         }
 
         .search-button{
-            height: 38px;
+           
             outline:none;
             border:none;
             border-radius: 0 5px 5px 0;

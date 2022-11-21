@@ -54,7 +54,7 @@
                 </div>
             </div>
         </div>
-        <ControlTable />
+        <ControlTable @quitGame="quitGame"/>
     </section>
 </template>
 

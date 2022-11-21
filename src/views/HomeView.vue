@@ -40,7 +40,7 @@ export default {
     PokeParty,
     
   },
-  data:() => {
+  data() {
     return{
       imageUrl :'',
       apiUrl:'',

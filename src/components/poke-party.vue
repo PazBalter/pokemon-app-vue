@@ -57,11 +57,14 @@ export default {
   },
   computed: {
     pokemons() {
-        return this.$store.getters.getMyPokemons;
+      return this.$store.getters.getMyPokemons;
     },
     getSlots(){
-        return this.$store.getters.getSlots;
+      return this.$store.getters.getSlots;
     },
+    isGameOn(){
+      return this.$store.getters.getGameIsOn
+    }
   },
   methods: {
     getMySlots() {
@@ -79,7 +82,12 @@ export default {
       this.$emit("closeParty", this.slots);
     },
     openHoverMenu(index) {
-      this.showMenu = index;
+      if(this.isGameOn){
+        this.showMenu = null;
+      }else{
+        this.showMenu = index;
+      }
+     
     },
     popFromParty(index) {
       this.$emit("popFromParty", index);
